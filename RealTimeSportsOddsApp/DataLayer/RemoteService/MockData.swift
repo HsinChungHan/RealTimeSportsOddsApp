@@ -6,26 +6,91 @@
 //
 
 import Foundation
+
 struct MockData {
-    static let matches = [
-        Match(matchID: 1001, teamA: "Eagles", teamB: "Tigers", startTime: Calendar.current.date(byAdding: .hour, value: 1, to: Date())!),
-        Match(matchID: 1002, teamA: "Lions", teamB: "Bears", startTime: Calendar.current.date(byAdding: .hour, value: 2, to: Date())!),
-        Match(matchID: 1003, teamA: "Wolves", teamB: "Sharks", startTime: Calendar.current.date(byAdding: .hour, value: 3, to: Date())!),
-        Match(matchID: 1004, teamA: "Hawks", teamB: "Panthers", startTime: Calendar.current.date(byAdding: .hour, value: 4, to: Date())!),
-        Match(matchID: 1005, teamA: "Dragons", teamB: "Phoenix", startTime: Calendar.current.date(byAdding: .hour, value: 5, to: Date())!),
-        Match(matchID: 1006, teamA: "Thunder", teamB: "Lightning", startTime: Calendar.current.date(byAdding: .day, value: 1, to: Date())!),
-        Match(matchID: 1007, teamA: "Fire", teamB: "Ice", startTime: Calendar.current.date(byAdding: .day, value: 1, to: Date())!),
-        Match(matchID: 1008, teamA: "Storm", teamB: "Breeze", startTime: Calendar.current.date(byAdding: .day, value: 1, to: Date())!)
+    
+    // 🚀 球隊名稱資料庫
+    private static let teamNames = [
+        "Eagles", "Tigers", "Lions", "Bears", "Wolves", "Sharks", "Hawks", "Panthers",
+        "Dragons", "Phoenix", "Thunder", "Lightning", "Fire", "Ice", "Storm", "Breeze",
+        "Warriors", "Knights", "Rangers", "Hunters", "Guardians", "Defenders", "Crusaders", "Champions",
+        "Bulls", "Rams", "Stallions", "Mustangs", "Colts", "Broncos", "Chargers", "Raiders",
+        "Falcons", "Ravens", "Cardinals", "Orioles", "Blue Jays", "Robins", "Sparrows", "Owls",
+        "Cobras", "Vipers", "Pythons", "Anacondas", "Mambas", "Rattlers", "Scorpions", "Spiders",
+        "Titans", "Giants", "Cyclones", "Hurricanes", "Tornadoes", "Meteors", "Comets", "Stars",
+        "Blazers", "Flames", "Inferno", "Magma", "Lava", "Ember", "Spark", "Flash",
+        "Wolves", "Foxes", "Leopards", "Jaguars", "Pumas", "Lynx", "Wildcats", "Cougars",
+        "Dolphins", "Whales", "Sharks", "Marlins", "Swordfish", "Barracudas", "Stingrays", "Piranhas",
+        "Rockets", "Missiles", "Jets", "Bombers", "Fighters", "Interceptors", "Destroyers", "Cruisers",
+        "Samurai", "Ninjas", "Ronin", "Shogun", "Daimyo", "Monks", "Priests", "Templars",
+        "Aliens", "Robots", "Cyborgs", "Androids", "Mechs", "Drones", "Bots", "AI"
     ]
     
-    static let initialOdds = [
-        Odds(matchID: 1001, teamAOdds: 1.95, teamBOdds: 2.10),
-        Odds(matchID: 1002, teamAOdds: 2.05, teamBOdds: 1.90),
-        Odds(matchID: 1003, teamAOdds: 1.80, teamBOdds: 2.25),
-        Odds(matchID: 1004, teamAOdds: 2.15, teamBOdds: 1.85),
-        Odds(matchID: 1005, teamAOdds: 1.75, teamBOdds: 2.30),
-        Odds(matchID: 1006, teamAOdds: 1.90, teamBOdds: 2.05),
-        Odds(matchID: 1007, teamAOdds: 2.20, teamBOdds: 1.80),
-        Odds(matchID: 1008, teamAOdds: 1.85, teamBOdds: 2.15)
-    ]
+    // 🎯 生成 100 筆比賽資料
+    static let matches: [Match] = {
+        var matches: [Match] = []
+        let calendar = Calendar.current
+        let now = Date()
+        
+        for i in 1...100 {
+            // 隨機選擇兩個不同的球隊
+            let shuffledTeams = teamNames.shuffled()
+            let teamA = shuffledTeams[0]
+            let teamB = shuffledTeams[1]
+            
+            // 生成未來的比賽時間
+            // 前50場：未來1-24小時內
+            // 後50場：未來1-7天內
+            let hoursToAdd = i <= 50 ? Int.random(in: 1...24) : Int.random(in: 24...168)
+            let startTime = calendar.date(byAdding: .hour, value: hoursToAdd, to: now) ?? now
+            
+            let match = Match(
+                matchID: 1000 + i,
+                teamA: teamA,
+                teamB: teamB,
+                startTime: startTime
+            )
+            
+            matches.append(match)
+        }
+        
+        // 按開始時間排序 (最近的在前面)
+        return matches.sorted { $0.startTime < $1.startTime }
+    }()
+    
+    // 🎯 對應的初始賠率資料
+    static let initialOdds: [Odds] = {
+        return matches.map { match in
+            // 生成合理的賠率 (通常在 1.1 ~ 3.0 之間)
+            let teamAOdds = Double.random(in: 1.2...2.8)
+            let teamBOdds = Double.random(in: 1.2...2.8)
+            
+            return Odds(
+                matchID: match.matchID,
+                teamAOdds: round(teamAOdds * 100) / 100, // 保留兩位小數
+                teamBOdds: round(teamBOdds * 100) / 100
+            )
+        }
+    }()
+    
+    // 🎯 便利方法：獲取指定數量的測試資料
+    static func getMatches(count: Int) -> [Match] {
+        return Array(matches.prefix(count))
+    }
+    
+    static func getOdds(count: Int) -> [Odds] {
+        return Array(initialOdds.prefix(count))
+    }
+    
+    // 🎯 便利方法：獲取指定範圍的賠率變化
+    static func getRandomOddsUpdate() -> Odds {
+        let randomMatch = matches.randomElement()!
+        let baseOdds = initialOdds.first { $0.matchID == randomMatch.matchID }!
+        
+        return Odds(
+            matchID: randomMatch.matchID,
+            teamAOdds: max(1.1, baseOdds.teamAOdds + Double.random(in: -0.3...0.3)),
+            teamBOdds: max(1.1, baseOdds.teamBOdds + Double.random(in: -0.3...0.3))
+        )
+    }
 }

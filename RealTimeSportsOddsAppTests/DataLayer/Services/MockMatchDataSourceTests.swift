@@ -24,8 +24,33 @@ final class MockMatchDataSourceTests: XCTestCase {
     // 🎯 測試 fetchMatches()
     func test_FetchMatches_ReturnsMockData() async throws {
         let matches = try await dataSource.fetchMatches()
-        XCTAssertEqual(matches.count, MockData.matches.count)
-        XCTAssertEqual(matches.first?.teamA, "Eagles")
+        
+        // 驗證資料筆數（預設 100 筆）
+        XCTAssertEqual(matches.count, 100, "應該回傳 100 筆比賽資料")
+        
+        // 驗證每筆資料的基本結構
+        for match in matches {
+            XCTAssertTrue(match.matchID >= 1001, "Match ID 應該從 1001 開始")
+            XCTAssertFalse(match.teamA.isEmpty, "隊伍 A 名稱不應為空")
+            XCTAssertFalse(match.teamB.isEmpty, "隊伍 B 名稱不應為空")
+            XCTAssertNotEqual(match.teamA, match.teamB, "兩隊名稱應該不同")
+            XCTAssertGreaterThan(match.startTime, Date(), "比賽時間應該在未來")
+        }
+        
+        // 驗證資料已按時間排序
+        for i in 0..<(matches.count - 1) {
+            XCTAssertLessThanOrEqual(
+                matches[i].startTime,
+                matches[i + 1].startTime,
+                "比賽應該按開始時間升序排列"
+            )
+        }
+        
+        // 驗證 Match ID 的唯一性
+        let matchIDs = Set(matches.map { $0.matchID })
+        XCTAssertEqual(matchIDs.count, matches.count, "所有 Match ID 應該是唯一的")
+        
+        print("✅ fetchMatches 測試通過：\(matches.count) 筆資料")
     }
 
     // 🎯 測試 fetchOdds()
