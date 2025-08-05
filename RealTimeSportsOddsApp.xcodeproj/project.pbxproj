@@ -54,6 +54,7 @@
 		D1C9D0C92E40B1BD00327A75 /* GetMatchesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0C82E40B1BD00327A75 /* GetMatchesUseCaseTests.swift */; };
 		D1C9D0CC2E40B26F00327A75 /* GetOddsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0CB2E40B26F00327A75 /* GetOddsUseCaseTests.swift */; };
 		D1C9D0CF2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0CE2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift */; };
+		D1C9D0D12E40EC7E00327A75 /* MatchListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +110,7 @@
 		D1C9D0C82E40B1BD00327A75 /* GetMatchesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatchesUseCaseTests.swift; sourceTree = "<group>"; };
 		D1C9D0CB2E40B26F00327A75 /* GetOddsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOddsUseCaseTests.swift; sourceTree = "<group>"; };
 		D1C9D0CE2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveOddsUpdatesUseCaseTests.swift; sourceTree = "<group>"; };
+		D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,6 +218,7 @@
 		D1C9D08F2E3F50D500327A75 /* PresenterLayer */ = {
 			isa = PBXGroup;
 			children = (
+				D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */,
 			);
 			path = PresenterLayer;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				D1C9D0B32E3F55BB00327A75 /* MockData.swift in Sources */,
 				D1C9D0B62E3F572200327A75 /* CacheService.swift in Sources */,
 				D1C9D0A32E3F529C00327A75 /* MatchRepository.swift in Sources */,
+				D1C9D0D12E40EC7E00327A75 /* MatchListViewModel.swift in Sources */,
 				D1C9D0862E3F501700327A75 /* MatchWithOdds.swift in Sources */,
 				D1C9D0892E3F50B100327A75 /* MatchRepositoryProtocol.swift in Sources */,
 				D1C9D0A82E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */,
