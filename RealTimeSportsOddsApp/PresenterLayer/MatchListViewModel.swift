@@ -26,11 +26,11 @@ class MatchListViewModel: ObservableObject {
     private var pendingOddsUpdates: [Int: Odds] = [:]
     private var batchUpdateTask: Task<Void, Never>?
     
-    init(
-        getMatchesUseCase: GetMatchesUseCaseProtocol,
-        getOddsUseCase: GetOddsUseCaseProtocol,
-        observeOddsUpdatesUseCase: ObserveOddsUpdatesUseCaseProtocol
-    ) {
+    // 🚀 優化：添加節流機制
+    private var lastUpdateTime = Date()
+    private let minUpdateInterval: TimeInterval = 0.05 // 最小更新間隔 50ms
+    
+    init(getMatchesUseCase: GetMatchesUseCaseProtocol, getOddsUseCase: GetOddsUseCaseProtocol, observeOddsUpdatesUseCase: ObserveOddsUpdatesUseCaseProtocol) {
         self.getMatchesUseCase = getMatchesUseCase
         self.getOddsUseCase = getOddsUseCase
         self.observeOddsUpdatesUseCase = observeOddsUpdatesUseCase
@@ -119,7 +119,6 @@ private extension MatchListViewModel {
         return matchesDict
     }
     
-    // 🚀 批次處理賠率更新
     private func handleOddsUpdate(_ newOdds: Odds) {
         // 收集待處理的更新
         pendingOddsUpdates[newOdds.matchID] = newOdds
@@ -127,15 +126,17 @@ private extension MatchListViewModel {
         // 取消之前的批次任務
         batchUpdateTask?.cancel()
         
+        // 🚀 優化：延長批次處理時間 (從 16ms 改為 100ms)
+        // 這樣可以收集更多更新，減少 UI 刷新頻率
         // TODO: - 之後用 CADisplayLink 處理
-        // 延遲批次處理 (16ms = 60 FPS)
         batchUpdateTask = Task {
-            try? await Task.sleep(nanoseconds: 16_000_000)
+            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
             
             guard !Task.isCancelled else { return }
             processBatchOddsUpdates()
         }
     }
+
     
     // 🚀 背景執行緒處理排序
     private func updatePublishedMatches() async {
@@ -152,6 +153,20 @@ private extension MatchListViewModel {
         pendingOddsUpdates.removeAll()
         
         guard !updates.isEmpty else { return }
+        
+        // 🚀 節流：如果距離上次更新時間太短，則延遲處理
+        let now = Date()
+        if now.timeIntervalSince(lastUpdateTime) < minUpdateInterval {
+            // 延遲到最小間隔後再處理
+            Task {
+                let delay = minUpdateInterval - now.timeIntervalSince(lastUpdateTime)
+                try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                processBatchOddsUpdates()
+            }
+            return
+        }
+        
+        lastUpdateTime = now
         
         Task {
             // 🚀 背景執行緒批次處理更新
@@ -172,7 +187,7 @@ private extension MatchListViewModel {
             matchesDict = updatedDict
             await updatePublishedMatches()
             
-            print("⚡ 批次更新 \(updates.count) 筆賠率")
+            print("⚡ 批次更新 \(updates.count) 筆賠率 (節流優化)")
         }
     }
     
