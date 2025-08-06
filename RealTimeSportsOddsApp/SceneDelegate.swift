@@ -11,39 +11,56 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     var window: UIWindow?
     
-    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        // 🚀 Setup dependencies
+        // MARK: - 🚀 Setup Clean Architecture Dependencies
+        
+        // 1️⃣ Infrastructure Layer (Data Sources & Cache)
         let cacheService = CacheService()
         let dataSource = WebSocketDataSource()
+        
+        // 2️⃣ Repository Layer
         let repository = MatchRepository(dataSource: dataSource, cacheService: cacheService)
         
+        // 3️⃣ Use Case Layer - Data Operations
         let getMatchesUseCase = GetMatchesUseCase(repository: repository)
         let getOddsUseCase = GetOddsUseCase(repository: repository)
         let observeOddsUpdatesUseCase = ObserveOddsUpdatesUseCase(repository: repository)
         
-        let viewModel = MatchListViewModel(
-            getMatchesUseCase: getMatchesUseCase,
-            getOddsUseCase: getOddsUseCase,
+        // 4️⃣ Use Case Layer - Batch Processing (New!)
+        let batchUpdateUseCase = BatchUpdateUseCase(
             observeOddsUpdatesUseCase: observeOddsUpdatesUseCase
         )
         
-        // 🆕 使用增强版本的 ViewController (含 FPS 监控)
+        // 5️⃣ Presentation Layer - ViewModel
+        let viewModel = MatchListViewModel(
+            getMatchesUseCase: getMatchesUseCase,
+            getOddsUseCase: getOddsUseCase,
+            batchUpdateUseCase: batchUpdateUseCase
+        )
+        
+        // 6️⃣ Presentation Layer - View Controller
         let viewController = MatchListViewController(viewModel: viewModel)
         let navigationController = UINavigationController(rootViewController: viewController)
         
-        // 🎯 配置 Navigation Controller 外观
+        // 🎯 Configure Navigation Controller Appearance
         setupNavigationAppearance(navigationController)
         
+        // 🪟 Setup Window
         window = UIWindow(windowScene: windowScene)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         
-        print("🎯 App 启动完成 - 已启用 FPS 监控功能")
+        print("🎯 应用启动完成")
+        print("   ├─ 数据源: WebSocket 模拟 (每秒10笔更新)")
+        print("   ├─ 缓存: NSCache (比赛5分钟, 赔率1分钟)")
+        print("   ├─ 批次处理: BatchUpdateUseCase (滚动优化)")
+        print("   ├─ UI监控: FPS Monitor + 性能统计")
+        print("   └─ 架构: Clean Architecture + MVVM")
     }
     
+    // MARK: - UI Configuration
     private func setupNavigationAppearance(_ navigationController: UINavigationController) {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -54,6 +71,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         navigationController.navigationBar.scrollEdgeAppearance = appearance
         navigationController.navigationBar.prefersLargeTitles = false
     }
-    
-    
 }

@@ -58,6 +58,8 @@
 		D1C9D0D52E4247C600327A75 /* MatchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */; };
 		D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */; };
 		D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */; };
+		D1C9D0F12E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */; };
+		D1C9D0F32E43A31F00327A75 /* BatchUpdateUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -117,6 +119,8 @@
 		D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewController.swift; sourceTree = "<group>"; };
 		D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetrics.swift; sourceTree = "<group>"; };
 		D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
+		D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCaseProtocol.swift; sourceTree = "<group>"; };
+		D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -213,6 +217,7 @@
 		D1C9D08B2E3F50BD00327A75 /* DomainLayer */ = {
 			isa = PBXGroup;
 			children = (
+				D1C9D0EF2E43A2ED00327A75 /* BatchUpdateUseCase */,
 				D1C9D0992E3F51E100327A75 /* GetMatchUseCase */,
 				D1C9D09A2E3F51EE00327A75 /* GetOddsUseCase */,
 				D1C9D09E2E3F520E00327A75 /* UpdatesOddsUseCase */,
@@ -357,6 +362,15 @@
 			path = UpdatesOddsUseCase;
 			sourceTree = "<group>";
 		};
+		D1C9D0EF2E43A2ED00327A75 /* BatchUpdateUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */,
+				D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */,
+			);
+			path = BatchUpdateUseCase;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -494,6 +508,7 @@
 				D1C9D09C2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
 				D1C9D08D2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
 				D1C9D04D2E3F4F7400327A75 /* AppDelegate.swift in Sources */,
+				D1C9D0F12E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift in Sources */,
 				D1C9D0B02E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */,
 				D1C9D0AD2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
 				D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */,
@@ -510,6 +525,7 @@
 				D1C9D0862E3F501700327A75 /* MatchWithOdds.swift in Sources */,
 				D1C9D0D32E42479000327A75 /* MatchCell.swift in Sources */,
 				D1C9D0892E3F50B100327A75 /* MatchRepositoryProtocol.swift in Sources */,
+				D1C9D0F32E43A31F00327A75 /* BatchUpdateUseCase.swift in Sources */,
 				D1C9D0A82E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
