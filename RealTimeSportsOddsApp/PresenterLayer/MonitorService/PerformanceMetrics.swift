@@ -90,8 +90,8 @@ class PerformanceMetrics {
         let totalSessions = scrollSessions.count
         let avgSessionFPS = scrollSessions.isEmpty ? 0 : scrollSessions.map { $0.avgFPS }.reduce(0, +) / Double(totalSessions)
         
-        return String(format: "平均更新: %.2fms | 滾動會話: %d | 平均FPS: %.1f",
-                      avgDuration, totalSessions, avgSessionFPS)
+        return String(format: "平均更新: %.2fms | 平均FPS: %.1f",
+                      avgDuration, avgSessionFPS)
     }
     
     func reset() {

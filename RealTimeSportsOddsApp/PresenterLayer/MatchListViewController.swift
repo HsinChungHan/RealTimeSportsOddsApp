@@ -368,7 +368,7 @@ class MatchListViewController: UIViewController {
             let fpsStats = fpsMonitor.statisticsInfo
             let avgUpdateTime = performanceMetrics.averageUpdateDuration
             
-            let fpsText = String(format: "FPS 監控: %@ | 平均更新耗時: %.2fms", fpsStats, avgUpdateTime * 1000)
+            let fpsText = String(format: "FPS 監控: %@", fpsStats)
             
             let attributedText = NSMutableAttributedString(string: fpsText)
             

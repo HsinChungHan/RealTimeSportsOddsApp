@@ -80,8 +80,7 @@ class FPSMonitor {
         let dropRate = Double(droppedFrames) / Double(totalFrames) * 100
         let avgFPS = fps
         
-        return String(format: "FPS: %.1f | 丟幀率: %.1f%% | 總幀數: %d",
-                      avgFPS, dropRate, totalFrames)
+        return String(format: "FPS: %.1f", avgFPS)
     }
     
     // MARK: - Private Methods
