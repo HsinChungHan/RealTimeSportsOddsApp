@@ -38,7 +38,7 @@ class PerformanceMetrics {
         
         session.endTime = CACurrentMediaTime()
         
-        // 计算会话统计
+        // 計算會話統計
         if !fpsValues.isEmpty {
             session.minFPS = fpsValues.min() ?? 60.0
             session.maxFPS = fpsValues.max() ?? 0.0
@@ -49,17 +49,17 @@ class PerformanceMetrics {
         scrollSessions.append(session)
         currentScrollSession = nil
         
-        // 清空当前会话数据
+        // 清空當前會話數據
         fpsValues.removeAll()
         frameDropCount = 0
         
-        print("📊 滚动会话结束: 时长 \(String(format: "%.2f", session.duration))s, 平均FPS \(String(format: "%.1f", session.avgFPS))")
+        print("📊 滾動會話結束: 時長 \(String(format: "%.2f", session.duration))s, 平均FPS \(String(format: "%.1f", session.avgFPS))")
     }
     
     func recordUpdateDuration(_ duration: TimeInterval) {
         updateDurations.append(duration)
         
-        // 保持最近 100 次记录
+        // 保持最近 100 次記錄
         if updateDurations.count > 100 {
             updateDurations.removeFirst()
         }
@@ -68,7 +68,7 @@ class PerformanceMetrics {
     func recordFPS(_ fps: Double) {
         fpsValues.append(fps)
         
-        // 更新当前会话
+        // 更新當前會話
         if var session = currentScrollSession {
             session.minFPS = min(session.minFPS, fps)
             session.maxFPS = max(session.maxFPS, fps)
@@ -90,8 +90,8 @@ class PerformanceMetrics {
         let totalSessions = scrollSessions.count
         let avgSessionFPS = scrollSessions.isEmpty ? 0 : scrollSessions.map { $0.avgFPS }.reduce(0, +) / Double(totalSessions)
         
-        return String(format: "平均更新: %.2fms | 滚动会话: %d | 平均FPS: %.1f",
-                     avgDuration, totalSessions, avgSessionFPS)
+        return String(format: "平均更新: %.2fms | 滾動會話: %d | 平均FPS: %.1f",
+                      avgDuration, totalSessions, avgSessionFPS)
     }
     
     func reset() {

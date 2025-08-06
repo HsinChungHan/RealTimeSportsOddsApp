@@ -39,7 +39,7 @@ class MatchListViewController: UIViewController {
         return indicator
     }()
     
-    // 🆕 增强的状态监控容器 - 支持双行显示
+    // 🆕 增強的狀態監控容器 - 支持雙行顯示
     private lazy var statusContainerView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -52,24 +52,24 @@ class MatchListViewController: UIViewController {
         return view
     }()
     
-    // 🆕 第一行：基本状态信息
+    // 🆕 第一行：基本狀態信息
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 14, weight: .medium)
         label.textColor = .label
-        label.text = "状态: 待机 | 已更新 MatchModel: 0 | Cell重载: 0"
+        label.text = "狀態: 待機 | 已更新 odds: 0 | Cell重載: 0"
         label.textAlignment = .center
         return label
     }()
     
-    // 🆕 第二行：FPS 监控信息
+    // 🆕 第二行：FPS 監控信息
     private lazy var fpsLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .systemFont(ofSize: 12, weight: .regular)
         label.textColor = .secondaryLabel
-        label.text = "FPS 监控: 待机状态"
+        label.text = "FPS 監控: 待機狀態"
         label.textAlignment = .center
         return label
     }()
@@ -78,23 +78,23 @@ class MatchListViewController: UIViewController {
     private let viewModel: MatchListViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    // 🚀 FPS 监控
+    // 🚀 FPS 監控
     private let fpsMonitor = FPSMonitor()
     
-    // 🚀 滚动状态追踪
+    // 🚀 滾動狀態追蹤
     private var isUserScrolling = false
     private var scrollEndTimer: Timer?
     
     // 🎯 批次更新管理
     private let maxBatchSize = 15
     
-    // 📊 效能统计
+    // 📊 效能統計
     private var cellReloadsCount = 0
     
-    // 🎯 状态更新计时器
+    // 🎯 狀態更新計時器
     private var statusUpdateTimer: Timer?
     
-    // 📊 性能数据收集
+    // 📊 性能數據收集
     private var performanceMetrics = PerformanceMetrics()
     
     // MARK: - Lifecycle
@@ -116,7 +116,7 @@ class MatchListViewController: UIViewController {
         
         viewModel.loadData()
         
-        print("🎯 Enhanced MatchListViewController 初始化完成 (含 FPS 监控)")
+        print("🎯 Enhanced MatchListViewController 初始化完成 (含 FPS 監控)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -132,18 +132,18 @@ class MatchListViewController: UIViewController {
     
     // MARK: - Setup Methods
     private func setupUI() {
-        title = "即时赔率 (FPS Monitor)"
+        title = "即時賠率 (FPS Monitor)"
         view.backgroundColor = .systemBackground
         
-        // 🆕 添加调试按钮
+        // 🆕 添加調試按鈕
         setupNavigationBar()
         
-        // 添加子视图
+        // 添加子視圖
         view.addSubview(tableView)
         view.addSubview(loadingIndicator)
         view.addSubview(statusContainerView)
         
-        // 🆕 设置双行状态标签
+        // 🆕 設置雙行狀態標籤
         setupStatusLabels()
         
         tableView.refreshControl = refreshControl
@@ -167,13 +167,13 @@ class MatchListViewController: UIViewController {
         navigationItem.rightBarButtonItems = [refreshButton, debugButton]
     }
     
-    // 🆕 设置双行状态监控标签
+    // 🆕 設置雙行狀態監控標籤
     private func setupStatusLabels() {
         statusContainerView.addSubview(statusLabel)
         statusContainerView.addSubview(fpsLabel)
         
         NSLayoutConstraint.activate([
-            // 第一行：基本状态
+            // 第一行：基本狀態
             statusLabel.topAnchor.constraint(equalTo: statusContainerView.topAnchor, constant: 8),
             statusLabel.leadingAnchor.constraint(equalTo: statusContainerView.leadingAnchor, constant: 16),
             statusLabel.trailingAnchor.constraint(equalTo: statusContainerView.trailingAnchor, constant: -16),
@@ -205,13 +205,13 @@ class MatchListViewController: UIViewController {
         ])
     }
     
-    // 🆕 设置 FPS 监控
+    // 🆕 設置 FPS 監控
     private func setupFPSMonitor() {
         fpsMonitor.delegate = self
     }
     
     private func setupBindings() {
-        // 监听数据变化
+        // 監聽數據變化
         viewModel.$matchesWithOdds
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matches in
@@ -233,13 +233,13 @@ class MatchListViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // 批次更新回调
+        // 批次更新回調
         viewModel.onBatchOddsUpdate = { [weak self] updates in
             self?.handleBatchOddsUpdate(updates)
         }
     }
     
-    // 🎯 启动状态更新计时器
+    // 🎯 啓動狀態更新計時器
     private func startStatusUpdater() {
         statusUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             self?.updateStatusLabels()
@@ -253,24 +253,24 @@ class MatchListViewController: UIViewController {
     
     // MARK: - Data Handling
     private func handleMatchesUpdate(_ matches: [MatchWithOdds]) {
-        print("🔄 收到数据更新：\(matches.count) 筆")
+        print("🔄 收到數據更新：\(matches.count) 筆")
         
         if tableView.numberOfRows(inSection: 0) != matches.count {
-            print("📊 数据笔数变化，重新加载 TableView")
+            print("📊 數據筆數變化，重新加載 TableView")
             tableView.reloadData()
         }
         
         updateStatusLabels()
     }
     
-    // 🚀 核心方法：处理批次赔率更新
+    // 🚀 核心方法：處理批次賠率更新
     private func handleBatchOddsUpdate(_ updates: [Int: Odds]) {
         let startTime = CACurrentMediaTime()
         
-        print("⚡ 收到批次更新：\(updates.count) 筆赔率")
+        print("⚡ 收到批次更新：\(updates.count) 筆賠率")
         
         guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else {
-            print("📱 没有可见的 cells，跳过更新")
+            print("📱 沒有可見的 cells，跳過更新")
             return
         }
         
@@ -286,13 +286,13 @@ class MatchListViewController: UIViewController {
         }
         
         guard !indexPathsToReload.isEmpty else {
-            print("📱 可见范围内没有需要更新的 cells")
+            print("📱 可見範圍內沒有需要更新的 cells")
             return
         }
         
-        print("🔄 更新 \(indexPathsToReload.count) 个可见 cells")
+        print("🔄 更新 \(indexPathsToReload.count) 個可見 cells")
         
-        // 分批处理
+        // 分批處理
         let batches = indexPathsToReload.chunked(into: maxBatchSize)
         
         for (index, batch) in batches.enumerated() {
@@ -309,7 +309,7 @@ class MatchListViewController: UIViewController {
                     let endTime = CACurrentMediaTime()
                     let updateDuration = endTime - startTime
                     
-                    // 📊 记录性能数据
+                    // 📊 記錄性能數據
                     self.performanceMetrics.recordUpdateDuration(updateDuration)
                     
                     self.updateStatusLabels()
@@ -329,11 +329,11 @@ class MatchListViewController: UIViewController {
     
     private func handleErrorStateChange(_ errorMessage: String?) {
         if let errorMessage = errorMessage {
-            print("❌ 显示错误：\(errorMessage)")
+            print("❌ 顯示錯誤：\(errorMessage)")
         }
     }
     
-    // 📊 更新状态标签 (双行版本)
+    // 📊 更新狀態標籤 (雙行版本)
     private func updateStatusLabels() {
         DispatchQueue.main.async {
             self.updateBasicStatusLabel()
@@ -341,17 +341,17 @@ class MatchListViewController: UIViewController {
         }
     }
     
-    // 🆕 更新基本状态标签
+    // 🆕 更新基本狀態標籤
     private func updateBasicStatusLabel() {
         let statistics = viewModel.statisticsInfo
         let totalReceived = extractTotalReceived(from: statistics)
         
-        let scrollingStatus = isUserScrolling ? "滚动中" : "待机"
-        let statusText = "状态: \(scrollingStatus) | 已更新 MatchModel: \(totalReceived) | Cell重载: \(cellReloadsCount)"
+        let scrollingStatus = isUserScrolling ? "滾動中" : "待機"
+        let statusText = "狀態: \(scrollingStatus) | 已更新 odds: \(totalReceived) | Cell重載: \(cellReloadsCount)"
         
         let attributedText = NSMutableAttributedString(string: statusText)
         
-        // 设置状态颜色
+        // 設置狀態顏色
         let statusColor: UIColor = isUserScrolling ? .systemOrange : .systemGreen
         if let statusRange = statusText.range(of: scrollingStatus) {
             let nsRange = NSRange(statusRange, in: statusText)
@@ -361,18 +361,18 @@ class MatchListViewController: UIViewController {
         statusLabel.attributedText = attributedText
     }
     
-    // 🆕 更新 FPS 状态标签
+    // 🆕 更新 FPS 狀態標籤
     private func updateFPSStatusLabel() {
         if isUserScrolling && fpsMonitor.isMonitoring {
             let fps = fpsMonitor.currentFPS
             let fpsStats = fpsMonitor.statisticsInfo
             let avgUpdateTime = performanceMetrics.averageUpdateDuration
             
-            let fpsText = String(format: "FPS 监控: %@ | 平均更新耗时: %.2fms", fpsStats, avgUpdateTime * 1000)
+            let fpsText = String(format: "FPS 監控: %@ | 平均更新耗時: %.2fms", fpsStats, avgUpdateTime * 1000)
             
             let attributedText = NSMutableAttributedString(string: fpsText)
             
-            // 根据 FPS 设置颜色
+            // 根據 FPS 設置顏色
             let fpsColor: UIColor
             if fps >= 55 {
                 fpsColor = .systemGreen
@@ -382,7 +382,7 @@ class MatchListViewController: UIViewController {
                 fpsColor = .systemRed
             }
             
-            // 设置 FPS 数值颜色
+            // 設置 FPS 數值顏色
             let fpsValueText = String(format: "%.1f", fps)
             if let fpsRange = fpsText.range(of: fpsValueText) {
                 let nsRange = NSRange(fpsRange, in: fpsText)
@@ -392,12 +392,12 @@ class MatchListViewController: UIViewController {
             
             fpsLabel.attributedText = attributedText
         } else {
-            fpsLabel.text = "FPS 监控: 待机状态"
+            fpsLabel.text = "FPS 監控: 待機狀態"
             fpsLabel.textColor = .secondaryLabel
         }
     }
     
-    // 🔧 从统计字串中提取总接收数量
+    // 🔧 從統計字串中提取總接收數量
     private func extractTotalReceived(from statistics: String) -> Int {
         let components = statistics.components(separatedBy: " | ")
         for component in components {
@@ -411,29 +411,29 @@ class MatchListViewController: UIViewController {
     
     // MARK: - Scrolling State Management with FPS
     
-    // 🎯 滚动状态管理（集成 FPS 监控）
+    // 🎯 滾動狀態管理（集成 FPS 監控）
     private func setScrollingState(_ scrolling: Bool) {
         guard isUserScrolling != scrolling else { return }
         
         isUserScrolling = scrolling
         
-        // 通知 ViewModel 滚动状态变化
+        // 通知 ViewModel 滾動狀態變化
         viewModel.setScrolling(scrolling)
         
         if scrolling {
-            print("📱 开始滚动 - 启动 FPS 监控")
+            print("📱 開始滾動 - 啓動 FPS 監控")
             fpsMonitor.startMonitoring()
             performanceMetrics.startScrollSession()
             
             scrollEndTimer?.invalidate()
         } else {
-            print("📱 停止滚动 - 延迟停止 FPS 监控")
+            print("📱 停止滾動 - 延遲停止 FPS 監控")
             performanceMetrics.endScrollSession()
             
-            // 延迟停止监控，确保捕获滚动结束的帧
+            // 延遲停止監控，確保捕獲滾動結束的幀
             scrollEndTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
                 self?.fpsMonitor.stopMonitoring()
-                print("🛑 FPS 监控已停止")
+                print("🛑 FPS 監控已停止")
             }
         }
         
@@ -442,9 +442,9 @@ class MatchListViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func handleRefresh() {
-        print("🔄 手动刷新数据")
+        print("🔄 手動刷新數據")
         
-        // 重置统计数据
+        // 重置統計數據
         cellReloadsCount = 0
         performanceMetrics.reset()
         
@@ -455,54 +455,54 @@ class MatchListViewController: UIViewController {
         let report = generatePerformanceReport()
         print(report)
         
-        // 显示性能报告 Alert
+        // 顯示性能報告 Alert
         let alert = UIAlertController(
-            title: "性能分析报告",
+            title: "性能分析報告",
             message: report,
             preferredStyle: .alert
         )
-        alert.addAction(UIAlertAction(title: "确定", style: .default))
+        alert.addAction(UIAlertAction(title: "確定", style: .default))
         present(alert, animated: true)
     }
     
-    // 📊 生成性能报告
+    // 📊 生成性能報告
     private func generatePerformanceReport() -> String {
         let fpsStats = fpsMonitor.statisticsInfo
         let viewModelStats = viewModel.statisticsInfo
         let perfStats = performanceMetrics.summary
         
         return """
-        📊 性能分析报告
-        ━━━━━━━━━━━━━━━━━━━━━━━━
-        🖼️ 渲染性能: \(fpsStats)
-        📡 数据处理: \(viewModelStats)
-        🔄 UI更新: Cell重载 \(cellReloadsCount) 次
-        ⏱️ 更新性能: \(perfStats)
-        ━━━━━━━━━━━━━━━━━━━━━━━━
-        
-        💡 性能建议:
-        \(generatePerformanceSuggestions())
-        """
+📊 性能分析報告
+━━━━━━━━━━━━━━━━━━━━━━━━
+🖼️ 渲染性能: \(fpsStats)
+📡 數據處理: \(viewModelStats)
+🔄 UI更新: Cell重載 \(cellReloadsCount) 次
+⏱️ 更新性能: \(perfStats)
+━━━━━━━━━━━━━━━━━━━━━━━━
+
+💡 性能建議:
+\(generatePerformanceSuggestions())
+"""
     }
     
-    // 💡 生成性能建议
+    // 💡 生成性能建議
     private func generatePerformanceSuggestions() -> String {
         var suggestions: [String] = []
         
         if fpsMonitor.currentFPS < 55 && fpsMonitor.isMonitoring {
-            suggestions.append("• 检测到帧率下降，建议减少批次更新频率")
+            suggestions.append("• 檢測到幀率下降，建議減少批次更新頻率")
         }
         
         if performanceMetrics.averageUpdateDuration > 0.016 { // > 16ms
-            suggestions.append("• UI更新耗时较长，建议优化Cell配置逻辑")
+            suggestions.append("• UI更新耗時較長，建議優化Cell配置邏輯")
         }
         
         if cellReloadsCount > 1000 {
-            suggestions.append("• Cell重载次数过多，建议优化更新策略")
+            suggestions.append("• Cell重載次數過多，建議優化更新策略")
         }
         
         if suggestions.isEmpty {
-            suggestions.append("• 性能表现良好，继续保持！")
+            suggestions.append("• 性能表現良好，繼續保持！")
         }
         
         return suggestions.joined(separator: "\n")
@@ -539,10 +539,10 @@ extension MatchListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let matchWithOdds = viewModel.matchesWithOdds[indexPath.row]
-        print("🎯 选择了比赛：\(matchWithOdds.match.teamA) vs \(matchWithOdds.match.teamB)")
+        print("🎯 選擇了比賽：\(matchWithOdds.match.teamA) vs \(matchWithOdds.match.teamB)")
     }
     
-    // 🚀 关键：滚动状态监听（集成 FPS 监控）
+    // 🚀 關鍵：滾動狀態監聽（集成 FPS 監控）
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         setScrollingState(true)
     }
@@ -562,28 +562,28 @@ extension MatchListViewController: UITableViewDelegate {
 extension MatchListViewController: FPSMonitorDelegate {
     func fpsMonitor(_ monitor: FPSMonitor, didUpdateFPS fps: Double, isDropped: Bool) {
         DispatchQueue.main.async {
-            // 记录 FPS 数据
+            // 記錄 FPS 數據
             self.performanceMetrics.recordFPS(fps)
             
-            // 更新状态标签
+            // 更新狀態標籤
             self.updateStatusLabels()
             
-            // 如果检测到严重卡顿，采取优化措施
+            // 如果檢測到嚴重卡頓，採取優化措施
             if isDropped && fps < 30.0 {
-                print("🚨 严重卡顿警告: FPS = \(String(format: "%.1f", fps))")
+                print("🚨 嚴重卡頓警告: FPS = \(String(format: "%.1f", fps))")
                 self.handleSevereFrameDrop()
             }
         }
     }
     
-    // 🚨 处理严重掉帧
+    // 🚨 處理嚴重掉幀
     private func handleSevereFrameDrop() {
-        print("🔧 启动性能保护模式")
+        print("🔧 啓動性能保護模式")
         
-        // 可以通知 ViewModel 启用性能模式
+        // 可以通知 ViewModel 啓用性能模式
         // viewModel.enablePerformanceMode(true)
         
-        // 或者临时增加更新间隔
+        // 或者臨時增加更新間隔
         performanceMetrics.recordFrameDrop()
     }
 }
