@@ -8,7 +8,7 @@
 import Foundation
 
 // 獲取 API 資料
-protocol MatchDataSourceProtocol {
+protocol WebSocketDataSourceProtocol {
     func fetchMatches() async throws -> [Match]
     func fetchOdds() async throws -> [Odds]
     func observeOddsUpdates() -> AsyncStream<Odds>

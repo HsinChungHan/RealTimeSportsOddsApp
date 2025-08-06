@@ -7,32 +7,17 @@
 
 import Foundation
 
-class MockMatchDataSource: MatchDataSourceProtocol {
+class WebSocketDataSource: WebSocketDataSourceProtocol {
     
-    // 🎯 可配置參數
     private let matchCount: Int
-    private let updateInterval: TimeInterval
-    private let maxUpdatesPerBatch: Int
-    
     private lazy var dateFormatter = makeDateFormatter()
     
-    // MARK: - 初始化
-    init(
-        matchCount: Int = 100,              // 比賽數量
-        updateInterval: TimeInterval = 0.5,  // 更新間隔 (秒)
-        maxUpdatesPerBatch: Int = 3         // 每次最多更新筆數
-    ) {
+    init(matchCount: Int = 100) {
         self.matchCount = matchCount
-        self.updateInterval = updateInterval
-        self.maxUpdatesPerBatch = maxUpdatesPerBatch
-        
-        print("🚀 Mock DataSource 初始化：\(matchCount) 筆比賽，每 \(updateInterval) 秒更新 1-\(maxUpdatesPerBatch) 筆賠率")
+        print("🌐 模擬真實 WebSocket DataSource 初始化：\(matchCount) 筆比賽")
     }
     
-    // MARK: - MatchDataSourceProtocol
-    
     func fetchMatches() async throws -> [Match] {
-        // 模擬網路延遲
         try await Task.sleep(nanoseconds: 500_000_000) // 0.5 秒
         
         let matches = MockData.getMatches(count: matchCount)
@@ -41,12 +26,9 @@ class MockMatchDataSource: MatchDataSourceProtocol {
     }
     
     func fetchOdds() async throws -> [Odds] {
-        // 模擬網路延遲
         try await Task.sleep(nanoseconds: 300_000_000) // 0.3 秒
         
         let baseOdds = MockData.getOdds(count: matchCount)
-        
-        // 稍微變化初始賠率
         let odds = baseOdds.map { initialOdds in
             Odds(
                 matchID: initialOdds.matchID,
@@ -59,50 +41,61 @@ class MockMatchDataSource: MatchDataSourceProtocol {
         return odds
     }
     
+    // 🚀 關鍵：模擬真實 WebSocket 每秒推送 10 筆更新
     func observeOddsUpdates() -> AsyncStream<Odds> {
-        print("🔄 Mock WebSocket: 開始監聽賠率更新")
-        print("⚙️ 配置：每 \(updateInterval) 秒，1-\(maxUpdatesPerBatch) 筆更新")
+        print("🌐 模擬真實 WebSocket: 每秒推送 10 筆賠率更新")
         
         return AsyncStream { continuation in
             let task = Task {
                 var updateCount = 0
+                var secondCounter = 0
                 
                 while !Task.isCancelled {
-                    // 根據配置的間隔時間等待
-                    let nanoseconds = UInt64(updateInterval * 1_000_000_000)
-                    try? await Task.sleep(nanoseconds: nanoseconds)
+                    let startTime = Date()
                     
-                    guard !Task.isCancelled else { break }
-                    
-                    // 根據配置的最大更新數量隨機產生更新
-                    let updatesCount = Int.random(in: 1...maxUpdatesPerBatch)
-                    
-                    for _ in 0..<updatesCount {
+                    // 🎯 每秒推送 10 筆更新
+                    for i in 0..<10 {
+                        guard !Task.isCancelled else { break }
+                        
                         let odds = MockData.getRandomOddsUpdate()
                         continuation.yield(odds)
                         updateCount += 1
+                        
+                        // 在一秒內平均分配 10 筆更新 (每 100ms 一筆)
+                        if i < 9 { // 最後一筆不需要等待
+                            try? await Task.sleep(nanoseconds: 100_000_000) // 100ms
+                        }
                     }
                     
-                    // 每 50 次更新記錄一次
-                    if updateCount % 50 == 0 {
-                        print("⚡ Mock WebSocket: 已推播 \(updateCount) 次賠率更新")
+                    secondCounter += 1
+                    let elapsedTime = Date().timeIntervalSince(startTime)
+                    
+                    // 確保整個循環接近 1 秒
+                    let remainingTime = 1.0 - elapsedTime
+                    if remainingTime > 0 {
+                        try? await Task.sleep(nanoseconds: UInt64(remainingTime * 1_000_000_000))
+                    }
+                    
+                    // 每 10 秒記錄一次統計
+                    if secondCounter % 10 == 0 {
+                        let actualRate = Double(updateCount) / Double(secondCounter)
+                        print("📊 WebSocket 統計: 已運行 \(secondCounter) 秒，總更新 \(updateCount) 筆，實際速率: \(String(format: "%.1f", actualRate)) 筆/秒")
                     }
                 }
                 
-                print("🛑 Mock WebSocket: 停止推播")
+                print("🛑 WebSocket 模擬停止")
                 continuation.finish()
             }
             
             continuation.onTermination = { _ in
-                print("🔌 Mock WebSocket: 連線終止")
+                print("🔌 WebSocket 連線終止")
                 task.cancel()
             }
         }
     }
 }
 
-
-private extension MockMatchDataSource {
+private extension WebSocketDataSource {
     private func makeDateFormatter() -> ISO8601DateFormatter {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]

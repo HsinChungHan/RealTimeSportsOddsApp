@@ -9,11 +9,11 @@ import XCTest
 @testable import RealTimeSportsOddsApp
 
 final class MockMatchDataSourceTests: XCTestCase {
-    var dataSource: MockMatchDataSource!
+    var dataSource: WebSocketDataSource!
 
     override func setUp() {
         super.setUp()
-        dataSource = MockMatchDataSource()
+        dataSource = WebSocketDataSource()
     }
 
     override func tearDown() {
