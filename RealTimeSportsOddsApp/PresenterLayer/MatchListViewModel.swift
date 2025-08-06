@@ -212,7 +212,7 @@ private extension MatchListViewModel {
     func updatePublishedMatches() async {
         let sortedMatches = await Task.detached(priority: .userInitiated) {
             return await Array(self.matchesDict.values)
-                .sorted { $0.match.startTime < $1.match.startTime }
+                .sorted { $0.match.startTime > $1.match.startTime }
         }.value
         
         matchesWithOdds = sortedMatches
