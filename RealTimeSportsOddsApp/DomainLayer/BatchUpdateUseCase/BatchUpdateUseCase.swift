@@ -9,7 +9,7 @@ import Foundation
 class BatchUpdateUseCase: BatchUpdateUseCaseProtocol {
     
     // MARK: - Dependencies
-    private let observeOddsUpdatesUseCase: ObserveOddsUpdatesUseCaseProtocol
+    private let repository: MatchRepositoryProtocol
     
     // MARK: - State Management
     private var isProcessing = false
@@ -37,9 +37,8 @@ class BatchUpdateUseCase: BatchUpdateUseCaseProtocol {
     }
     
     // MARK: - Initialization
-    init(observeOddsUpdatesUseCase: ObserveOddsUpdatesUseCaseProtocol) {
-        self.observeOddsUpdatesUseCase = observeOddsUpdatesUseCase
-        print("📦 BatchUpdateUseCase 初始化完成")
+    init(repository: MatchRepositoryProtocol) {
+        self.repository = repository
     }
     
     deinit {
@@ -141,7 +140,7 @@ private extension BatchUpdateUseCase {
         oddsUpdateTask = Task { [weak self] in
             print("⚡ 開始監聽賠率更新")
             
-            for await oddsUpdate in self?.observeOddsUpdatesUseCase.execute() ?? AsyncStream<Odds>.makeEmpty() {
+            for await oddsUpdate in self?.repository.observeOddsUpdates() ?? AsyncStream<Odds>.makeEmpty() {
                 await self?.handleOddsUpdate(oddsUpdate)
             }
         }

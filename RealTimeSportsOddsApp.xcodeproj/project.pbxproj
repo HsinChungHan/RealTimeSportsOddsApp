@@ -27,14 +27,10 @@
 		D1C9D08E2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D08C2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift */; };
 		D1C9D0912E3F50F100327A75 /* GetOddsUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0902E3F50F100327A75 /* GetOddsUseCaseProtocol.swift */; };
 		D1C9D0922E3F50F100327A75 /* GetOddsUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0902E3F50F100327A75 /* GetOddsUseCaseProtocol.swift */; };
-		D1C9D0942E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0932E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift */; };
-		D1C9D0952E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0932E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift */; };
 		D1C9D0972E3F51CE00327A75 /* GetMatchesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0962E3F51CE00327A75 /* GetMatchesUseCase.swift */; };
 		D1C9D0982E3F51CE00327A75 /* GetMatchesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0962E3F51CE00327A75 /* GetMatchesUseCase.swift */; };
 		D1C9D09C2E3F520400327A75 /* GetOddsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D09B2E3F520400327A75 /* GetOddsUseCase.swift */; };
 		D1C9D09D2E3F520400327A75 /* GetOddsUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D09B2E3F520400327A75 /* GetOddsUseCase.swift */; };
-		D1C9D0A02E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D09F2E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift */; };
-		D1C9D0A12E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D09F2E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift */; };
 		D1C9D0A32E3F529C00327A75 /* MatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A22E3F529C00327A75 /* MatchRepository.swift */; };
 		D1C9D0A42E3F529C00327A75 /* MatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A22E3F529C00327A75 /* MatchRepository.swift */; };
 		D1C9D0A82E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */; };
@@ -52,7 +48,6 @@
 		D1C9D0C42E40B05900327A75 /* MatchRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0C32E40B05900327A75 /* MatchRepositoryTests.swift */; };
 		D1C9D0C92E40B1BD00327A75 /* GetMatchesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0C82E40B1BD00327A75 /* GetMatchesUseCaseTests.swift */; };
 		D1C9D0CC2E40B26F00327A75 /* GetOddsUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0CB2E40B26F00327A75 /* GetOddsUseCaseTests.swift */; };
-		D1C9D0CF2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0CE2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift */; };
 		D1C9D0D12E40EC7E00327A75 /* MatchListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */; };
 		D1C9D0D32E42479000327A75 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D22E42479000327A75 /* MatchCell.swift */; };
 		D1C9D0D52E4247C600327A75 /* MatchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */; };
@@ -98,10 +93,8 @@
 		D1C9D0882E3F50B100327A75 /* MatchRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRepositoryProtocol.swift; sourceTree = "<group>"; };
 		D1C9D08C2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatchesUseCaseProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0902E3F50F100327A75 /* GetOddsUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOddsUseCaseProtocol.swift; sourceTree = "<group>"; };
-		D1C9D0932E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveOddsUpdatesUseCaseProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0962E3F51CE00327A75 /* GetMatchesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatchesUseCase.swift; sourceTree = "<group>"; };
 		D1C9D09B2E3F520400327A75 /* GetOddsUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOddsUseCase.swift; sourceTree = "<group>"; };
-		D1C9D09F2E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveOddsUpdatesUseCase.swift; sourceTree = "<group>"; };
 		D1C9D0A22E3F529C00327A75 /* MatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRepository.swift; sourceTree = "<group>"; };
 		D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDataSourceProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0AC2E3F535E00327A75 /* WebSocketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketDataSource.swift; sourceTree = "<group>"; };
@@ -113,7 +106,6 @@
 		D1C9D0C32E40B05900327A75 /* MatchRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRepositoryTests.swift; sourceTree = "<group>"; };
 		D1C9D0C82E40B1BD00327A75 /* GetMatchesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetMatchesUseCaseTests.swift; sourceTree = "<group>"; };
 		D1C9D0CB2E40B26F00327A75 /* GetOddsUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetOddsUseCaseTests.swift; sourceTree = "<group>"; };
-		D1C9D0CE2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveOddsUpdatesUseCaseTests.swift; sourceTree = "<group>"; };
 		D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewModel.swift; sourceTree = "<group>"; };
 		D1C9D0D22E42479000327A75 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewController.swift; sourceTree = "<group>"; };
@@ -220,7 +212,6 @@
 				D1C9D0EF2E43A2ED00327A75 /* BatchUpdateUseCase */,
 				D1C9D0992E3F51E100327A75 /* GetMatchUseCase */,
 				D1C9D09A2E3F51EE00327A75 /* GetOddsUseCase */,
-				D1C9D09E2E3F520E00327A75 /* UpdatesOddsUseCase */,
 			);
 			path = DomainLayer;
 			sourceTree = "<group>";
@@ -252,15 +243,6 @@
 				D1C9D09B2E3F520400327A75 /* GetOddsUseCase.swift */,
 			);
 			path = GetOddsUseCase;
-			sourceTree = "<group>";
-		};
-		D1C9D09E2E3F520E00327A75 /* UpdatesOddsUseCase */ = {
-			isa = PBXGroup;
-			children = (
-				D1C9D0932E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift */,
-				D1C9D09F2E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift */,
-			);
-			path = UpdatesOddsUseCase;
 			sourceTree = "<group>";
 		};
 		D1C9D0A52E3F52B200327A75 /* DomainModels */ = {
@@ -330,7 +312,6 @@
 		D1C9D0C62E40B15F00327A75 /* DomainLayer */ = {
 			isa = PBXGroup;
 			children = (
-				D1C9D0CD2E40B28A00327A75 /* UpdatesOddsUseCase */,
 				D1C9D0CA2E40B21900327A75 /* GetOddsUseCase */,
 				D1C9D0C72E40B16B00327A75 /* GetMatchUseCase */,
 			);
@@ -351,14 +332,6 @@
 				D1C9D0CB2E40B26F00327A75 /* GetOddsUseCaseTests.swift */,
 			);
 			path = GetOddsUseCase;
-			sourceTree = "<group>";
-		};
-		D1C9D0CD2E40B28A00327A75 /* UpdatesOddsUseCase */ = {
-			isa = PBXGroup;
-			children = (
-				D1C9D0CE2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift */,
-			);
-			path = UpdatesOddsUseCase;
 			sourceTree = "<group>";
 		};
 		D1C9D0EF2E43A2ED00327A75 /* BatchUpdateUseCase */ = {
@@ -511,7 +484,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1C9D0832E3F4FDB00327A75 /* Odds.swift in Sources */,
-				D1C9D0A02E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */,
 				D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */,
 				D1C9D09C2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
 				D1C9D08D2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
@@ -521,7 +493,6 @@
 				D1C9D0AD2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
 				D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */,
 				D1C9D04F2E3F4F7400327A75 /* SceneDelegate.swift in Sources */,
-				D1C9D0942E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */,
 				D1C9D0802E3F4FC600327A75 /* Match.swift in Sources */,
 				D1C9D0972E3F51CE00327A75 /* GetMatchesUseCase.swift in Sources */,
 				D1C9D0912E3F50F100327A75 /* GetOddsUseCaseProtocol.swift in Sources */,
@@ -548,10 +519,8 @@
 				D1C9D0BD2E40AD4A00327A75 /* MockMatchDataSourceTests.swift in Sources */,
 				D1C9D0AE2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
 				D1C9D0842E3F4FDB00327A75 /* Odds.swift in Sources */,
-				D1C9D0A12E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */,
 				D1C9D0B12E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */,
 				D1C9D0872E3F501700327A75 /* MatchWithOdds.swift in Sources */,
-				D1C9D0952E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */,
 				D1C9D0C92E40B1BD00327A75 /* GetMatchesUseCaseTests.swift in Sources */,
 				D1C9D0642E3F4F7600327A75 /* RealTimeSportsOddsAppTests.swift in Sources */,
 				D1C9D0922E3F50F100327A75 /* GetOddsUseCaseProtocol.swift in Sources */,
@@ -559,7 +528,6 @@
 				D1C9D0A42E3F529C00327A75 /* MatchRepository.swift in Sources */,
 				D1C9D0A92E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */,
 				D1C9D0B42E3F55BB00327A75 /* MockData.swift in Sources */,
-				D1C9D0CF2E40B2DB00327A75 /* ObserveOddsUpdatesUseCaseTests.swift in Sources */,
 				D1C9D09D2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
 				D1C9D08A2E3F50B100327A75 /* MatchRepositoryProtocol.swift in Sources */,
 				D1C9D0C42E40B05900327A75 /* MatchRepositoryTests.swift in Sources */,

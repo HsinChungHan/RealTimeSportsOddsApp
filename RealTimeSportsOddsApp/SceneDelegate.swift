@@ -26,12 +26,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 3️⃣ Use Case Layer - Data Operations
         let getMatchesUseCase = GetMatchesUseCase(repository: repository)
         let getOddsUseCase = GetOddsUseCase(repository: repository)
-        let observeOddsUpdatesUseCase = ObserveOddsUpdatesUseCase(repository: repository)
         
-        // 4️⃣ Use Case Layer - Batch Processing (New!)
-        let batchUpdateUseCase = BatchUpdateUseCase(
-            observeOddsUpdatesUseCase: observeOddsUpdatesUseCase
-        )
+        // 4️⃣ Use Case Layer - Batch Processing
+        let batchUpdateUseCase = BatchUpdateUseCase(repository: repository)
         
         // 5️⃣ Presentation Layer - ViewModel
         let viewModel = MatchListViewModel(
