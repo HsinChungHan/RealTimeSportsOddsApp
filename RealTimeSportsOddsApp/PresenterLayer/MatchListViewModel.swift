@@ -1,5 +1,5 @@
 //
-//  MatchListViewModel.swift
+//  MatchListViewModel.swift (Fixed Version)
 //  RealTimeSportsOddsApp
 //
 //  Created by Chung Han Hsin on 2025/8/4.
@@ -20,6 +20,7 @@ class MatchListViewModel: ObservableObject {
     private let getMatchesUseCase: GetMatchesUseCaseProtocol
     private let getOddsUseCase: GetOddsUseCaseProtocol
     private let batchUpdateUseCase: BatchUpdateUseCaseProtocol
+    private var fpsMonitorUseCase: FPSMonitorUseCaseProtocol  // 🆕 新增 FPS Monitor UseCase
     
     // MARK: - State Management
     private var cancellables = Set<AnyCancellable>()
@@ -30,6 +31,7 @@ class MatchListViewModel: ObservableObject {
     
     // MARK: - Callbacks
     var onBatchOddsUpdate: (([Int: Odds]) -> Void)?
+    var onFPSUpdate: ((Double, Bool) -> Void)?  // 🆕 新增 FPS 更新回調
     
     // MARK: - Performance Metrics
     private var dataUpdateCount = 0
@@ -38,20 +40,24 @@ class MatchListViewModel: ObservableObject {
     init(
         getMatchesUseCase: GetMatchesUseCaseProtocol,
         getOddsUseCase: GetOddsUseCaseProtocol,
-        batchUpdateUseCase: BatchUpdateUseCaseProtocol
+        batchUpdateUseCase: BatchUpdateUseCaseProtocol,
+        fpsMonitorUseCase: FPSMonitorUseCaseProtocol  // 🆕 新增依賴注入
     ) {
         self.getMatchesUseCase = getMatchesUseCase
         self.getOddsUseCase = getOddsUseCase
         self.batchUpdateUseCase = batchUpdateUseCase
+        self.fpsMonitorUseCase = fpsMonitorUseCase  // 🆕 保存引用
         
         setupBatchUpdateUseCase()
+        setupFPSMonitorUseCase()  // 🆕 設置 FPS 監控
         
-        print("🎯 MatchListViewModel 初始化完成 (使用 BatchUpdateUseCase)")
+        print("🎯 MatchListViewModel 初始化完成 (使用 BatchUpdateUseCase + FPSMonitorUseCase)")
     }
     
     deinit {
         // 直接调用非 MainActor 方法
         batchUpdateUseCase.stopBatchProcessing()
+        fpsMonitorUseCase.stopMonitoring()  // 🆕 停止 FPS 監控
         print("🗑️ MatchListViewModel 已释放")
     }
 }
@@ -81,7 +87,7 @@ extension MatchListViewModel {
         }
     }
     
-    /// 设置滚动状态
+    /// 设置滚动状态 (🆕 集成 FPS 監控)
     func setScrolling(_ scrolling: Bool) {
         guard isScrolling != scrolling else { return }
         
@@ -90,13 +96,35 @@ extension MatchListViewModel {
         // 委托给 BatchUpdateUseCase 处理滚动状态
         batchUpdateUseCase.setScrolling(scrolling)
         
+        // 🔧 管理 FPS 監控狀態 - 避免 MainActor 問題
+        Task.detached { [weak self] in
+            if scrolling {
+                await self?.fpsMonitorUseCase.startMonitoring()
+            } else {
+                // 延遲停止以確保捕獲最後的幀
+                try? await Task.sleep(nanoseconds: 300_000_000) // 0.3 秒
+                await self?.fpsMonitorUseCase.stopMonitoring()
+            }
+        }
+        
         print("📱 滚动状态更新: \(scrolling ? "开始滚动" : "停止滚动")")
     }
     
-    /// 获取统计信息
+    /// 获取统计信息 (🆕 包含 FPS 信息)
     var statisticsInfo: String {
         let batchStats = batchUpdateUseCase.statisticsInfo
-        return "\(batchStats) | 数据更新: \(dataUpdateCount)"
+        let fpsStats = fpsMonitorUseCase.statisticsInfo
+        return "\(batchStats) | 数据更新: \(dataUpdateCount) | \(fpsStats)"
+    }
+    
+    // 🆕 獲取當前 FPS
+    var currentFPS: Double {
+        return fpsMonitorUseCase.currentFPS
+    }
+    
+    // 🆕 獲取監控狀態
+    var isFPSMonitoring: Bool {
+        return fpsMonitorUseCase.isMonitoring
     }
 }
 
@@ -111,6 +139,19 @@ private extension MatchListViewModel {
         }
         
         print("🔗 BatchUpdateUseCase 回调设置完成")
+    }
+    
+    /// 🔧 設置 FPS 監控用例 (修正版本)
+    func setupFPSMonitorUseCase() {
+        // 直接設置回調，避免複雜的委託模式
+        fpsMonitorUseCase.onFPSUpdate = { [weak self] fps, isDropped in
+            // 🔧 確保在主線程上調用 UI 回調
+            DispatchQueue.main.async {
+                self?.onFPSUpdate?(fps, isDropped)
+            }
+        }
+        
+        print("🔗 FPSMonitorUseCase 回調設置完成")
     }
     
     /// 执行数据加载

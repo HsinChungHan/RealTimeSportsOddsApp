@@ -28,19 +28,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let getOddsUseCase = GetOddsUseCase(repository: repository)
         let observeOddsUpdatesUseCase = ObserveOddsUpdatesUseCase(repository: repository)
         
-        // 4️⃣ Use Case Layer - Batch Processing (New!)
+        // 4️⃣ Use Case Layer - Batch Processing
         let batchUpdateUseCase = BatchUpdateUseCase(
             observeOddsUpdatesUseCase: observeOddsUpdatesUseCase
         )
         
-        // 5️⃣ Presentation Layer - ViewModel
+        // 🆕 5️⃣ Use Case Layer - Performance Monitoring
+        let fpsProvider = UIKitFPSProvider()
+        let fpsMonitorUseCase = FPSMonitorUseCase(fpsProvider: fpsProvider)
+        
+        // 6️⃣ Presentation Layer - ViewModel
         let viewModel = MatchListViewModel(
             getMatchesUseCase: getMatchesUseCase,
             getOddsUseCase: getOddsUseCase,
-            batchUpdateUseCase: batchUpdateUseCase
+            batchUpdateUseCase: batchUpdateUseCase,
+            fpsMonitorUseCase: fpsMonitorUseCase  // 🆕 注入 FPS Monitor UseCase
         )
         
-        // 6️⃣ Presentation Layer - View Controller
+        // 7️⃣ Presentation Layer - View Controller
         let viewController = MatchListViewController(viewModel: viewModel)
         let navigationController = UINavigationController(rootViewController: viewController)
         
@@ -56,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         print("   ├─ 数据源: WebSocket 模拟 (每秒10笔更新)")
         print("   ├─ 缓存: NSCache (比赛5分钟, 赔率1分钟)")
         print("   ├─ 批次处理: BatchUpdateUseCase (滚动优化)")
-        print("   ├─ UI监控: FPS Monitor + 性能统计")
+        print("   ├─ UI监控: FPSMonitorUseCase + 性能统计")  // 🆕 更新日誌
         print("   └─ 架构: Clean Architecture + MVVM")
     }
     

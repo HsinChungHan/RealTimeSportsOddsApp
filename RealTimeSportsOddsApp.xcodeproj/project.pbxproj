@@ -57,9 +57,11 @@
 		D1C9D0D32E42479000327A75 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D22E42479000327A75 /* MatchCell.swift */; };
 		D1C9D0D52E4247C600327A75 /* MatchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */; };
 		D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */; };
-		D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */; };
 		D1C9D0F12E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */; };
 		D1C9D0F32E43A31F00327A75 /* BatchUpdateUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */; };
+		D1C9D0F62E43AA0B00327A75 /* FPSMonitorUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F52E43AA0B00327A75 /* FPSMonitorUseCase.swift */; };
+		D1C9D0F82E43AA1800327A75 /* FPSMonitorUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F72E43AA1800327A75 /* FPSMonitorUseCaseProtocol.swift */; };
+		D1C9D0FA2E43AB0F00327A75 /* UIKitFPSProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F92E43AB0F00327A75 /* UIKitFPSProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,9 +120,11 @@
 		D1C9D0D22E42479000327A75 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewController.swift; sourceTree = "<group>"; };
 		D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetrics.swift; sourceTree = "<group>"; };
-		D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCaseProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCase.swift; sourceTree = "<group>"; };
+		D1C9D0F52E43AA0B00327A75 /* FPSMonitorUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitorUseCase.swift; sourceTree = "<group>"; };
+		D1C9D0F72E43AA1800327A75 /* FPSMonitorUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitorUseCaseProtocol.swift; sourceTree = "<group>"; };
+		D1C9D0F92E43AB0F00327A75 /* UIKitFPSProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIKitFPSProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -217,6 +221,7 @@
 		D1C9D08B2E3F50BD00327A75 /* DomainLayer */ = {
 			isa = PBXGroup;
 			children = (
+				D1C9D0F42E43A9EA00327A75 /* FPSMonitorUseCase */,
 				D1C9D0EF2E43A2ED00327A75 /* BatchUpdateUseCase */,
 				D1C9D0992E3F51E100327A75 /* GetMatchUseCase */,
 				D1C9D09A2E3F51EE00327A75 /* GetOddsUseCase */,
@@ -232,7 +237,7 @@
 				D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */,
 				D1C9D0D22E42479000327A75 /* MatchCell.swift */,
 				D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */,
-				D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */,
+				D1C9D0F92E43AB0F00327A75 /* UIKitFPSProvider.swift */,
 			);
 			path = PresenterLayer;
 			sourceTree = "<group>";
@@ -371,6 +376,15 @@
 			path = BatchUpdateUseCase;
 			sourceTree = "<group>";
 		};
+		D1C9D0F42E43A9EA00327A75 /* FPSMonitorUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				D1C9D0F72E43AA1800327A75 /* FPSMonitorUseCaseProtocol.swift */,
+				D1C9D0F52E43AA0B00327A75 /* FPSMonitorUseCase.swift */,
+			);
+			path = FPSMonitorUseCase;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -505,13 +519,13 @@
 				D1C9D0832E3F4FDB00327A75 /* Odds.swift in Sources */,
 				D1C9D0A02E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */,
 				D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */,
+				D1C9D0FA2E43AB0F00327A75 /* UIKitFPSProvider.swift in Sources */,
 				D1C9D09C2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
 				D1C9D08D2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
 				D1C9D04D2E3F4F7400327A75 /* AppDelegate.swift in Sources */,
 				D1C9D0F12E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift in Sources */,
 				D1C9D0B02E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */,
 				D1C9D0AD2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
-				D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */,
 				D1C9D04F2E3F4F7400327A75 /* SceneDelegate.swift in Sources */,
 				D1C9D0942E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */,
 				D1C9D0802E3F4FC600327A75 /* Match.swift in Sources */,
@@ -520,6 +534,8 @@
 				D1C9D0B32E3F55BB00327A75 /* MockData.swift in Sources */,
 				D1C9D0B62E3F572200327A75 /* CacheService.swift in Sources */,
 				D1C9D0A32E3F529C00327A75 /* MatchRepository.swift in Sources */,
+				D1C9D0F62E43AA0B00327A75 /* FPSMonitorUseCase.swift in Sources */,
+				D1C9D0F82E43AA1800327A75 /* FPSMonitorUseCaseProtocol.swift in Sources */,
 				D1C9D0D52E4247C600327A75 /* MatchListViewController.swift in Sources */,
 				D1C9D0D12E40EC7E00327A75 /* MatchListViewModel.swift in Sources */,
 				D1C9D0862E3F501700327A75 /* MatchWithOdds.swift in Sources */,
