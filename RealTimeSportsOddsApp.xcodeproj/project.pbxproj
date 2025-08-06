@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D1C9D04D2E3F4F7400327A75 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D04C2E3F4F7400327A75 /* AppDelegate.swift */; };
 		D1C9D04F2E3F4F7400327A75 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D04E2E3F4F7400327A75 /* SceneDelegate.swift */; };
-		D1C9D0512E3F4F7400327A75 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0502E3F4F7400327A75 /* ViewController.swift */; };
 		D1C9D0542E3F4F7400327A75 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1C9D0522E3F4F7400327A75 /* Main.storyboard */; };
 		D1C9D0562E3F4F7500327A75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D1C9D0552E3F4F7500327A75 /* Assets.xcassets */; };
 		D1C9D0592E3F4F7500327A75 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D1C9D0572E3F4F7500327A75 /* LaunchScreen.storyboard */; };
@@ -40,8 +39,8 @@
 		D1C9D0A42E3F529C00327A75 /* MatchRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A22E3F529C00327A75 /* MatchRepository.swift */; };
 		D1C9D0A82E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */; };
 		D1C9D0A92E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */; };
-		D1C9D0AD2E3F535E00327A75 /* MockMatchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AC2E3F535E00327A75 /* MockMatchDataSource.swift */; };
-		D1C9D0AE2E3F535E00327A75 /* MockMatchDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AC2E3F535E00327A75 /* MockMatchDataSource.swift */; };
+		D1C9D0AD2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AC2E3F535E00327A75 /* WebSocketDataSource.swift */; };
+		D1C9D0AE2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AC2E3F535E00327A75 /* WebSocketDataSource.swift */; };
 		D1C9D0B02E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AF2E3F54B300327A75 /* CacheServiceProtocol.swift */; };
 		D1C9D0B12E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0AF2E3F54B300327A75 /* CacheServiceProtocol.swift */; };
 		D1C9D0B32E3F55BB00327A75 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0B22E3F55BB00327A75 /* MockData.swift */; };
@@ -57,6 +56,8 @@
 		D1C9D0D12E40EC7E00327A75 /* MatchListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */; };
 		D1C9D0D32E42479000327A75 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D22E42479000327A75 /* MatchCell.swift */; };
 		D1C9D0D52E4247C600327A75 /* MatchListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */; };
+		D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */; };
+		D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,7 +81,6 @@
 		D1C9D0492E3F4F7400327A75 /* RealTimeSportsOddsApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RealTimeSportsOddsApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D1C9D04C2E3F4F7400327A75 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D1C9D04E2E3F4F7400327A75 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		D1C9D0502E3F4F7400327A75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		D1C9D0532E3F4F7400327A75 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D1C9D0552E3F4F7500327A75 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D1C9D0582E3F4F7500327A75 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -102,7 +102,7 @@
 		D1C9D09F2E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserveOddsUpdatesUseCase.swift; sourceTree = "<group>"; };
 		D1C9D0A22E3F529C00327A75 /* MatchRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchRepository.swift; sourceTree = "<group>"; };
 		D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDataSourceProtocol.swift; sourceTree = "<group>"; };
-		D1C9D0AC2E3F535E00327A75 /* MockMatchDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockMatchDataSource.swift; sourceTree = "<group>"; };
+		D1C9D0AC2E3F535E00327A75 /* WebSocketDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketDataSource.swift; sourceTree = "<group>"; };
 		D1C9D0AF2E3F54B300327A75 /* CacheServiceProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheServiceProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0B22E3F55BB00327A75 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		D1C9D0B52E3F572200327A75 /* CacheService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheService.swift; sourceTree = "<group>"; };
@@ -115,6 +115,8 @@
 		D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewModel.swift; sourceTree = "<group>"; };
 		D1C9D0D22E42479000327A75 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchListViewController.swift; sourceTree = "<group>"; };
+		D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PerformanceMetrics.swift; sourceTree = "<group>"; };
+		D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,7 +169,6 @@
 			children = (
 				D1C9D04C2E3F4F7400327A75 /* AppDelegate.swift */,
 				D1C9D04E2E3F4F7400327A75 /* SceneDelegate.swift */,
-				D1C9D0502E3F4F7400327A75 /* ViewController.swift */,
 				D1C9D08F2E3F50D500327A75 /* PresenterLayer */,
 				D1C9D08B2E3F50BD00327A75 /* DomainLayer */,
 				D1C9D07C2E3F4F7B00327A75 /* DataLayer */,
@@ -225,6 +226,8 @@
 				D1C9D0D02E40EC7E00327A75 /* MatchListViewModel.swift */,
 				D1C9D0D42E4247C600327A75 /* MatchListViewController.swift */,
 				D1C9D0D22E42479000327A75 /* MatchCell.swift */,
+				D1C9D0EB2E43A02700327A75 /* PerformanceMetrics.swift */,
+				D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */,
 			);
 			path = PresenterLayer;
 			sourceTree = "<group>";
@@ -279,7 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				D1C9D0A72E3F52D100327A75 /* MatchDataSourceProtocol.swift */,
-				D1C9D0AC2E3F535E00327A75 /* MockMatchDataSource.swift */,
+				D1C9D0AC2E3F535E00327A75 /* WebSocketDataSource.swift */,
 				D1C9D0B22E3F55BB00327A75 /* MockData.swift */,
 			);
 			path = RemoteService;
@@ -486,13 +489,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1C9D0832E3F4FDB00327A75 /* Odds.swift in Sources */,
-				D1C9D0512E3F4F7400327A75 /* ViewController.swift in Sources */,
 				D1C9D0A02E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */,
+				D1C9D0EC2E43A02700327A75 /* PerformanceMetrics.swift in Sources */,
 				D1C9D09C2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
 				D1C9D08D2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
 				D1C9D04D2E3F4F7400327A75 /* AppDelegate.swift in Sources */,
 				D1C9D0B02E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */,
-				D1C9D0AD2E3F535E00327A75 /* MockMatchDataSource.swift in Sources */,
+				D1C9D0AD2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
+				D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */,
 				D1C9D04F2E3F4F7400327A75 /* SceneDelegate.swift in Sources */,
 				D1C9D0942E3F510000327A75 /* ObserveOddsUpdatesUseCaseProtocol.swift in Sources */,
 				D1C9D0802E3F4FC600327A75 /* Match.swift in Sources */,
@@ -518,7 +522,7 @@
 				D1C9D08E2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
 				D1C9D0982E3F51CE00327A75 /* GetMatchesUseCase.swift in Sources */,
 				D1C9D0BD2E40AD4A00327A75 /* MockMatchDataSourceTests.swift in Sources */,
-				D1C9D0AE2E3F535E00327A75 /* MockMatchDataSource.swift in Sources */,
+				D1C9D0AE2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
 				D1C9D0842E3F4FDB00327A75 /* Odds.swift in Sources */,
 				D1C9D0A12E3F522C00327A75 /* ObserveOddsUpdatesUseCase.swift in Sources */,
 				D1C9D0B12E3F54B300327A75 /* CacheServiceProtocol.swift in Sources */,
