@@ -5,12 +5,14 @@
 //  Created by Chung Han Hsin on 2025/8/5.
 //
 
+
 import UIKit
 import Combine
 
+// MARK: - Enhanced MatchListViewController with FPS Monitoring
 class MatchListViewController: UIViewController {
     
-    // MARK: - UI Components
+    // MARK: - UI Components (Same as original)
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -20,10 +22,7 @@ class MatchListViewController: UIViewController {
         tableView.estimatedRowHeight = 120
         tableView.separatorStyle = .singleLine
         tableView.backgroundColor = .systemBackground
-        
-        // 註冊 Cell
         tableView.register(MatchCell.self, forCellReuseIdentifier: MatchCell.identifier)
-        
         return tableView
     }()
     
@@ -40,51 +39,63 @@ class MatchListViewController: UIViewController {
         return indicator
     }()
     
-    private lazy var errorView: UIView = {
-        let containerView = UIView()
-        containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.backgroundColor = .systemBackground
-        containerView.isHidden = true
-        
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.alignment = .center
-        
-        let errorLabel = UILabel()
-        errorLabel.text = "載入失敗"
-        errorLabel.font = .systemFont(ofSize: 18, weight: .medium)
-        errorLabel.textColor = .systemRed
-        errorLabel.textAlignment = .center
-        
-        let retryButton = UIButton(type: .system)
-        retryButton.setTitle("重試", for: .normal)
-        retryButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
-        retryButton.backgroundColor = .systemBlue
-        retryButton.setTitleColor(.white, for: .normal)
-        retryButton.layer.cornerRadius = 8
-        retryButton.contentEdgeInsets = UIEdgeInsets(top: 12, left: 24, bottom: 12, right: 24)
-        retryButton.addTarget(self, action: #selector(handleRetry), for: .touchUpInside)
-        
-        stackView.addArrangedSubview(errorLabel)
-        stackView.addArrangedSubview(retryButton)
-        containerView.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: containerView.centerYAnchor)
-        ])
-        
-        return containerView
+    // 🆕 增强的状态监控容器 - 支持双行显示
+    private lazy var statusContainerView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground.withAlphaComponent(0.95)
+        view.layer.cornerRadius = 8
+        view.layer.shadowColor = UIColor.black.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 1)
+        view.layer.shadowOpacity = 0.1
+        view.layer.shadowRadius = 2
+        return view
+    }()
+    
+    // 🆕 第一行：基本状态信息
+    private lazy var statusLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 14, weight: .medium)
+        label.textColor = .label
+        label.text = "状态: 待机 | 已更新 MatchModel: 0 | Cell重载: 0"
+        label.textAlignment = .center
+        return label
+    }()
+    
+    // 🆕 第二行：FPS 监控信息
+    private lazy var fpsLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = .systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .secondaryLabel
+        label.text = "FPS 监控: 待机状态"
+        label.textAlignment = .center
+        return label
     }()
     
     // MARK: - Properties
     private let viewModel: MatchListViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    // 🚀 效能優化：記錄可見 cells 以避免不必要的更新
-    private var visibleIndexPaths: Set<IndexPath> = []
+    // 🚀 FPS 监控
+    private let fpsMonitor = FPSMonitor()
+    
+    // 🚀 滚动状态追踪
+    private var isUserScrolling = false
+    private var scrollEndTimer: Timer?
+    
+    // 🎯 批次更新管理
+    private let maxBatchSize = 15
+    
+    // 📊 效能统计
+    private var cellReloadsCount = 0
+    
+    // 🎯 状态更新计时器
+    private var statusUpdateTimer: Timer?
+    
+    // 📊 性能数据收集
+    private var performanceMetrics = PerformanceMetrics()
     
     // MARK: - Lifecycle
     init(viewModel: MatchListViewModel) {
@@ -100,77 +111,107 @@ class MatchListViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupBindings()
+        setupFPSMonitor()
+        startStatusUpdater()
         
-        // 開始載入資料
         viewModel.loadData()
         
-        print("🎯 ViewController 初始化完成")
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        // 🐛 Debug: 檢查 frame 是否正確設置
-        print("🔧 ViewDidLayoutSubviews - TableView Frame: \(tableView.frame)")
-        print("🔧 ViewDidLayoutSubviews - TableView ContentSize: \(tableView.contentSize)")
-        print("🔧 ViewDidLayoutSubviews - TableView isScrollEnabled: \(tableView.isScrollEnabled)")
+        print("🎯 Enhanced MatchListViewController 初始化完成 (含 FPS 监控)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // 重新連接 WebSocket（處理斷線重連）
         viewModel.retryConnection()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopStatusUpdater()
+        fpsMonitor.stopMonitoring()
     }
     
     // MARK: - Setup Methods
     private func setupUI() {
-        title = "即時賠率"
+        title = "即时赔率 (FPS Monitor)"
         view.backgroundColor = .systemBackground
         
-        // 添加 Navigation Bar 按鈕
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        // 🆕 添加调试按钮
+        setupNavigationBar()
+        
+        // 添加子视图
+        view.addSubview(tableView)
+        view.addSubview(loadingIndicator)
+        view.addSubview(statusContainerView)
+        
+        // 🆕 设置双行状态标签
+        setupStatusLabels()
+        
+        tableView.refreshControl = refreshControl
+        setupConstraints()
+    }
+    
+    private func setupNavigationBar() {
+        let refreshButton = UIBarButtonItem(
             barButtonSystemItem: .refresh,
             target: self,
             action: #selector(handleRefresh)
         )
         
-        // 添加子視圖
-        view.addSubview(tableView)
-        view.addSubview(loadingIndicator)
-        view.addSubview(errorView)
+        let debugButton = UIBarButtonItem(
+            title: "Debug",
+            style: .plain,
+            target: self,
+            action: #selector(showPerformanceReport)
+        )
         
-        // 添加下拉刷新
-        tableView.refreshControl = refreshControl
+        navigationItem.rightBarButtonItems = [refreshButton, debugButton]
+    }
+    
+    // 🆕 设置双行状态监控标签
+    private func setupStatusLabels() {
+        statusContainerView.addSubview(statusLabel)
+        statusContainerView.addSubview(fpsLabel)
         
-        // 🚀 確保 tableView 可以滾動的設置
-        tableView.isScrollEnabled = true
-        tableView.showsVerticalScrollIndicator = true
-        tableView.bounces = true
-        
-        // 設置約束
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            // 第一行：基本状态
+            statusLabel.topAnchor.constraint(equalTo: statusContainerView.topAnchor, constant: 8),
+            statusLabel.leadingAnchor.constraint(equalTo: statusContainerView.leadingAnchor, constant: 16),
+            statusLabel.trailingAnchor.constraint(equalTo: statusContainerView.trailingAnchor, constant: -16),
+            
+            // 第二行：FPS 信息
+            fpsLabel.topAnchor.constraint(equalTo: statusLabel.bottomAnchor, constant: 4),
+            fpsLabel.leadingAnchor.constraint(equalTo: statusContainerView.leadingAnchor, constant: 16),
+            fpsLabel.trailingAnchor.constraint(equalTo: statusContainerView.trailingAnchor, constant: -16),
+            fpsLabel.bottomAnchor.constraint(equalTo: statusContainerView.bottomAnchor, constant: -8)
+        ])
+    }
+    
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            // Status Container
+            statusContainerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            statusContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            statusContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            
+            // TableView
+            tableView.topAnchor.constraint(equalTo: statusContainerView.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             
+            // Loading Indicator
             loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            
-            errorView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            errorView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            errorView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            errorView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
-        
-        // 🐛 Debug: 輸出約束資訊
-        print("🔧 TableView Frame: \(tableView.frame)")
-        print("🔧 View Frame: \(view.frame)")
+    }
+    
+    // 🆕 设置 FPS 监控
+    private func setupFPSMonitor() {
+        fpsMonitor.delegate = self
     }
     
     private func setupBindings() {
-        // 🎯 監聽賠率資料變化
+        // 监听数据变化
         viewModel.$matchesWithOdds
             .receive(on: DispatchQueue.main)
             .sink { [weak self] matches in
@@ -178,7 +219,6 @@ class MatchListViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // 🎯 監聽載入狀態
         viewModel.$isLoading
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isLoading in
@@ -186,66 +226,101 @@ class MatchListViewController: UIViewController {
             }
             .store(in: &cancellables)
         
-        // 🎯 監聽錯誤訊息
         viewModel.$errorMessage
             .receive(on: DispatchQueue.main)
             .sink { [weak self] errorMessage in
                 self?.handleErrorStateChange(errorMessage)
             }
             .store(in: &cancellables)
+        
+        // 批次更新回调
+        viewModel.onBatchOddsUpdate = { [weak self] updates in
+            self?.handleBatchOddsUpdate(updates)
+        }
+    }
+    
+    // 🎯 启动状态更新计时器
+    private func startStatusUpdater() {
+        statusUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.updateStatusLabels()
+        }
+    }
+    
+    private func stopStatusUpdater() {
+        statusUpdateTimer?.invalidate()
+        statusUpdateTimer = nil
     }
     
     // MARK: - Data Handling
     private func handleMatchesUpdate(_ matches: [MatchWithOdds]) {
-        print("🔄 收到 \(matches.count) 筆賠率資料更新")
+        print("🔄 收到数据更新：\(matches.count) 筆")
         
-        // 🐛 Debug: 檢查資料和 tableView 狀態
-        print("🔧 TableView numberOfRows: \(tableView.numberOfRows(inSection: 0))")
-        print("🔧 New matches count: \(matches.count)")
-        print("🔧 TableView Frame: \(tableView.frame)")
-        print("🔧 TableView ContentSize: \(tableView.contentSize)")
-        
-        // 🚀 智能更新：只更新可見的 cells
-        if !matches.isEmpty {
-            // 如果是首次載入或資料筆數變化，重新載入整個 table
-            if tableView.numberOfRows(inSection: 0) != matches.count {
-                print("📊 資料筆數變化，重新載入 TableView")
-                tableView.reloadData()
-                
-                // 🐛 強制立即更新 layout
-                DispatchQueue.main.async {
-                    self.tableView.layoutIfNeeded()
-                    print("🔧 After reload - ContentSize: \(self.tableView.contentSize)")
-                }
-            } else {
-                updateVisibleCells()
-            }
+        if tableView.numberOfRows(inSection: 0) != matches.count {
+            print("📊 数据笔数变化，重新加载 TableView")
+            tableView.reloadData()
         }
+        
+        updateStatusLabels()
     }
     
-    private func updateVisibleCells() {
-        // 🚀 效能優化：只更新可見的 cells
-        let visibleIndexPaths = tableView.indexPathsForVisibleRows ?? []
+    // 🚀 核心方法：处理批次赔率更新
+    private func handleBatchOddsUpdate(_ updates: [Int: Odds]) {
+        let startTime = CACurrentMediaTime()
+        
+        print("⚡ 收到批次更新：\(updates.count) 筆赔率")
+        
+        guard let visibleIndexPaths = tableView.indexPathsForVisibleRows else {
+            print("📱 没有可见的 cells，跳过更新")
+            return
+        }
+        
+        var indexPathsToReload: [IndexPath] = []
         
         for indexPath in visibleIndexPaths {
-            if let cell = tableView.cellForRow(at: indexPath) as? MatchCell,
-               indexPath.row < viewModel.matchesWithOdds.count {
-                let matchWithOdds = viewModel.matchesWithOdds[indexPath.row]
-                
-                // 使用動畫更新賠率
-                UIView.transition(with: cell, duration: 0.2, options: .transitionCrossDissolve) {
-                    cell.configure(with: matchWithOdds)
-                }
+            guard indexPath.row < viewModel.matchesWithOdds.count else { continue }
+            
+            let matchWithOdds = viewModel.matchesWithOdds[indexPath.row]
+            if updates[matchWithOdds.match.matchID] != nil {
+                indexPathsToReload.append(indexPath)
             }
         }
         
-        print("⚡ 更新了 \(visibleIndexPaths.count) 個可見 cells")
+        guard !indexPathsToReload.isEmpty else {
+            print("📱 可见范围内没有需要更新的 cells")
+            return
+        }
+        
+        print("🔄 更新 \(indexPathsToReload.count) 个可见 cells")
+        
+        // 分批处理
+        let batches = indexPathsToReload.chunked(into: maxBatchSize)
+        
+        for (index, batch) in batches.enumerated() {
+            let delay = Double(index) * 0.03
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                UIView.performWithoutAnimation {
+                    self.tableView.reloadRows(at: batch, with: .none)
+                }
+                
+                self.cellReloadsCount += batch.count
+                
+                if index == batches.count - 1 {
+                    let endTime = CACurrentMediaTime()
+                    let updateDuration = endTime - startTime
+                    
+                    // 📊 记录性能数据
+                    self.performanceMetrics.recordUpdateDuration(updateDuration)
+                    
+                    self.updateStatusLabels()
+                }
+            }
+        }
     }
     
     private func handleLoadingStateChange(_ isLoading: Bool) {
         if isLoading {
             loadingIndicator.startAnimating()
-            errorView.isHidden = true
         } else {
             loadingIndicator.stopAnimating()
             refreshControl.endRefreshing()
@@ -254,24 +329,189 @@ class MatchListViewController: UIViewController {
     
     private func handleErrorStateChange(_ errorMessage: String?) {
         if let errorMessage = errorMessage {
-            print("❌ 顯示錯誤：\(errorMessage)")
-            errorView.isHidden = false
-            tableView.isHidden = true
-        } else {
-            errorView.isHidden = true
-            tableView.isHidden = false
+            print("❌ 显示错误：\(errorMessage)")
         }
+    }
+    
+    // 📊 更新状态标签 (双行版本)
+    private func updateStatusLabels() {
+        DispatchQueue.main.async {
+            self.updateBasicStatusLabel()
+            self.updateFPSStatusLabel()
+        }
+    }
+    
+    // 🆕 更新基本状态标签
+    private func updateBasicStatusLabel() {
+        let statistics = viewModel.statisticsInfo
+        let totalReceived = extractTotalReceived(from: statistics)
+        
+        let scrollingStatus = isUserScrolling ? "滚动中" : "待机"
+        let statusText = "状态: \(scrollingStatus) | 已更新 MatchModel: \(totalReceived) | Cell重载: \(cellReloadsCount)"
+        
+        let attributedText = NSMutableAttributedString(string: statusText)
+        
+        // 设置状态颜色
+        let statusColor: UIColor = isUserScrolling ? .systemOrange : .systemGreen
+        if let statusRange = statusText.range(of: scrollingStatus) {
+            let nsRange = NSRange(statusRange, in: statusText)
+            attributedText.addAttribute(.foregroundColor, value: statusColor, range: nsRange)
+        }
+        
+        statusLabel.attributedText = attributedText
+    }
+    
+    // 🆕 更新 FPS 状态标签
+    private func updateFPSStatusLabel() {
+        if isUserScrolling && fpsMonitor.isMonitoring {
+            let fps = fpsMonitor.currentFPS
+            let fpsStats = fpsMonitor.statisticsInfo
+            let avgUpdateTime = performanceMetrics.averageUpdateDuration
+            
+            let fpsText = String(format: "FPS 监控: %@ | 平均更新耗时: %.2fms", fpsStats, avgUpdateTime * 1000)
+            
+            let attributedText = NSMutableAttributedString(string: fpsText)
+            
+            // 根据 FPS 设置颜色
+            let fpsColor: UIColor
+            if fps >= 55 {
+                fpsColor = .systemGreen
+            } else if fps >= 30 {
+                fpsColor = .systemOrange
+            } else {
+                fpsColor = .systemRed
+            }
+            
+            // 设置 FPS 数值颜色
+            let fpsValueText = String(format: "%.1f", fps)
+            if let fpsRange = fpsText.range(of: fpsValueText) {
+                let nsRange = NSRange(fpsRange, in: fpsText)
+                attributedText.addAttribute(.foregroundColor, value: fpsColor, range: nsRange)
+                attributedText.addAttribute(.font, value: UIFont.systemFont(ofSize: 12, weight: .bold), range: nsRange)
+            }
+            
+            fpsLabel.attributedText = attributedText
+        } else {
+            fpsLabel.text = "FPS 监控: 待机状态"
+            fpsLabel.textColor = .secondaryLabel
+        }
+    }
+    
+    // 🔧 从统计字串中提取总接收数量
+    private func extractTotalReceived(from statistics: String) -> Int {
+        let components = statistics.components(separatedBy: " | ")
+        for component in components {
+            if component.hasPrefix("接收: ") {
+                let countStr = component.replacingOccurrences(of: "接收: ", with: "")
+                return Int(countStr) ?? 0
+            }
+        }
+        return 0
+    }
+    
+    // MARK: - Scrolling State Management with FPS
+    
+    // 🎯 滚动状态管理（集成 FPS 监控）
+    private func setScrollingState(_ scrolling: Bool) {
+        guard isUserScrolling != scrolling else { return }
+        
+        isUserScrolling = scrolling
+        
+        // 通知 ViewModel 滚动状态变化
+        viewModel.setScrolling(scrolling)
+        
+        if scrolling {
+            print("📱 开始滚动 - 启动 FPS 监控")
+            fpsMonitor.startMonitoring()
+            performanceMetrics.startScrollSession()
+            
+            scrollEndTimer?.invalidate()
+        } else {
+            print("📱 停止滚动 - 延迟停止 FPS 监控")
+            performanceMetrics.endScrollSession()
+            
+            // 延迟停止监控，确保捕获滚动结束的帧
+            scrollEndTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) { [weak self] _ in
+                self?.fpsMonitor.stopMonitoring()
+                print("🛑 FPS 监控已停止")
+            }
+        }
+        
+        updateStatusLabels()
     }
     
     // MARK: - Actions
     @objc private func handleRefresh() {
-        print("🔄 手動刷新資料")
+        print("🔄 手动刷新数据")
+        
+        // 重置统计数据
+        cellReloadsCount = 0
+        performanceMetrics.reset()
+        
         viewModel.loadData()
     }
     
-    @objc private func handleRetry() {
-        print("🔄 重試載入")
-        viewModel.loadData()
+    @objc private func showPerformanceReport() {
+        let report = generatePerformanceReport()
+        print(report)
+        
+        // 显示性能报告 Alert
+        let alert = UIAlertController(
+            title: "性能分析报告",
+            message: report,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "确定", style: .default))
+        present(alert, animated: true)
+    }
+    
+    // 📊 生成性能报告
+    private func generatePerformanceReport() -> String {
+        let fpsStats = fpsMonitor.statisticsInfo
+        let viewModelStats = viewModel.statisticsInfo
+        let perfStats = performanceMetrics.summary
+        
+        return """
+        📊 性能分析报告
+        ━━━━━━━━━━━━━━━━━━━━━━━━
+        🖼️ 渲染性能: \(fpsStats)
+        📡 数据处理: \(viewModelStats)
+        🔄 UI更新: Cell重载 \(cellReloadsCount) 次
+        ⏱️ 更新性能: \(perfStats)
+        ━━━━━━━━━━━━━━━━━━━━━━━━
+        
+        💡 性能建议:
+        \(generatePerformanceSuggestions())
+        """
+    }
+    
+    // 💡 生成性能建议
+    private func generatePerformanceSuggestions() -> String {
+        var suggestions: [String] = []
+        
+        if fpsMonitor.currentFPS < 55 && fpsMonitor.isMonitoring {
+            suggestions.append("• 检测到帧率下降，建议减少批次更新频率")
+        }
+        
+        if performanceMetrics.averageUpdateDuration > 0.016 { // > 16ms
+            suggestions.append("• UI更新耗时较长，建议优化Cell配置逻辑")
+        }
+        
+        if cellReloadsCount > 1000 {
+            suggestions.append("• Cell重载次数过多，建议优化更新策略")
+        }
+        
+        if suggestions.isEmpty {
+            suggestions.append("• 性能表现良好，继续保持！")
+        }
+        
+        return suggestions.joined(separator: "\n")
+    }
+    
+    deinit {
+        scrollEndTimer?.invalidate()
+        stopStatusUpdater()
+        fpsMonitor.stopMonitoring()
     }
 }
 
@@ -299,17 +539,60 @@ extension MatchListViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let matchWithOdds = viewModel.matchesWithOdds[indexPath.row]
-        print("🎯 選擇了比賽：\(matchWithOdds.match.teamA) vs \(matchWithOdds.match.teamB)")
+        print("🎯 选择了比赛：\(matchWithOdds.match.teamA) vs \(matchWithOdds.match.teamB)")
+    }
+    
+    // 🚀 关键：滚动状态监听（集成 FPS 监控）
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        setScrollingState(true)
+    }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        if !decelerate {
+            setScrollingState(false)
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        setScrollingState(false)
+    }
+}
+
+// MARK: - FPSMonitorDelegate
+extension MatchListViewController: FPSMonitorDelegate {
+    func fpsMonitor(_ monitor: FPSMonitor, didUpdateFPS fps: Double, isDropped: Bool) {
+        DispatchQueue.main.async {
+            // 记录 FPS 数据
+            self.performanceMetrics.recordFPS(fps)
+            
+            // 更新状态标签
+            self.updateStatusLabels()
+            
+            // 如果检测到严重卡顿，采取优化措施
+            if isDropped && fps < 30.0 {
+                print("🚨 严重卡顿警告: FPS = \(String(format: "%.1f", fps))")
+                self.handleSevereFrameDrop()
+            }
+        }
+    }
+    
+    // 🚨 处理严重掉帧
+    private func handleSevereFrameDrop() {
+        print("🔧 启动性能保护模式")
         
-        // TODO: 可以在這裡實作比賽詳情頁面
+        // 可以通知 ViewModel 启用性能模式
+        // viewModel.enablePerformanceMode(true)
+        
+        // 或者临时增加更新间隔
+        performanceMetrics.recordFrameDrop()
     }
-    
-    // 🚀 效能優化：追蹤可見 cells
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        visibleIndexPaths.insert(indexPath)
-    }
-    
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        visibleIndexPaths.remove(indexPath)
+}
+
+// MARK: - Array Extension for Batching
+extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: count, by: size).map {
+            Array(self[$0..<Swift.min($0 + size, count)])
+        }
     }
 }
