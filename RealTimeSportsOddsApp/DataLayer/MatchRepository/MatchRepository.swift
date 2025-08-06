@@ -8,10 +8,10 @@
 import Foundation
 
 class MatchRepository: MatchRepositoryProtocol {
-    private let dataSource: MatchDataSourceProtocol
+    private let dataSource: WebSocketDataSourceProtocol
     private let cacheService: CacheServiceProtocol
     
-    init(dataSource: MatchDataSourceProtocol, cacheService: CacheServiceProtocol) {
+    init(dataSource: WebSocketDataSource, cacheService: CacheServiceProtocol) {
         self.dataSource = dataSource
         self.cacheService = cacheService
     }

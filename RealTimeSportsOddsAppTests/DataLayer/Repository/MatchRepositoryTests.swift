@@ -29,7 +29,7 @@ final class MatchRepositoryTests: XCTestCase {
         }
     }
 
-    final class MockDataSource: MatchDataSourceProtocol {
+    final class MockDataSource: WebSocketDataSourceProtocol {
         var fetchMatchesCalled = false
         var fetchOddsCalled = false
         
