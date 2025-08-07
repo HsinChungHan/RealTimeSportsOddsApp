@@ -433,9 +433,7 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 }
 ```
 
-## 🎯 總結
-
-本專案成功實現了一個高性能的即時賽事賠率系統，具備以下技術亮點：
+## Conclusion
 
 ### 技術成果
 - ✅ **完整的 Clean Architecture 實現**
@@ -464,3 +462,8 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 - 同時在 Presenter Layer 創建 Adapter，將 FPSMonitorProvider 與 PerformanceMetricsProvider 實作於此層，這兩個 Provider 與平台相關（如 UIKit、QuartzCore 等），因此應由 Presenter Layer 依賴具體實作，並透過介面注入至 UseCase，讓 UseCase 僅依賴抽象，維持 Platform-independent 的特性。
 
 - 具體實作可以參考 `origin/feature/extract-usecase-from-FPSMonitor`，但因為還有 bug，所以還未 merge 回 master
+- 考量到本專案僅有 100 筆測試資料，因此採用一次性載入的方式。不過在實際應用中，可以與後端討論採用分頁（pagination）機制，藉此減輕前端在載入大量資料時的負擔，同時也能節省網路流量。
+
+
+### 感謝您辛苦 reviewe，有任何意見，都歡迎留言！
+
