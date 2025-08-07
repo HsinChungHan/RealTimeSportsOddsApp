@@ -11,7 +11,7 @@ class MatchRepository: MatchRepositoryProtocol {
     private let dataSource: WebSocketDataSourceProtocol
     private let cacheService: CacheServiceProtocol
     
-    init(dataSource: WebSocketDataSource, cacheService: CacheServiceProtocol) {
+    init(dataSource: WebSocketDataSourceProtocol, cacheService: CacheServiceProtocol) {
         self.dataSource = dataSource
         self.cacheService = cacheService
     }

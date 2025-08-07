@@ -55,6 +55,9 @@
 		D1C9D0EE2E43A04600327A75 /* FPSMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */; };
 		D1C9D0F12E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */; };
 		D1C9D0F32E43A31F00327A75 /* BatchUpdateUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */; };
+		D1C9D0FE2E4422A300327A75 /* BatchUpdateUseCaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0FD2E4422A300327A75 /* BatchUpdateUseCaseTests.swift */; };
+		D1DFAC372E442C7700598C78 /* BatchUpdateUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */; };
+		D1DFAC382E442C8A00598C78 /* BatchUpdateUseCaseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +116,7 @@
 		D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FPSMonitor.swift; sourceTree = "<group>"; };
 		D1C9D0F02E43A30400327A75 /* BatchUpdateUseCaseProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCaseProtocol.swift; sourceTree = "<group>"; };
 		D1C9D0F22E43A31F00327A75 /* BatchUpdateUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCase.swift; sourceTree = "<group>"; };
+		D1C9D0FD2E4422A300327A75 /* BatchUpdateUseCaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchUpdateUseCaseTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -312,6 +316,7 @@
 		D1C9D0C62E40B15F00327A75 /* DomainLayer */ = {
 			isa = PBXGroup;
 			children = (
+				D1C9D0FC2E44229400327A75 /* BatchUpdateUseCase */,
 				D1C9D0CA2E40B21900327A75 /* GetOddsUseCase */,
 				D1C9D0C72E40B16B00327A75 /* GetMatchUseCase */,
 			);
@@ -350,6 +355,14 @@
 				D1C9D0ED2E43A04600327A75 /* FPSMonitor.swift */,
 			);
 			path = MonitorService;
+			sourceTree = "<group>";
+		};
+		D1C9D0FC2E44229400327A75 /* BatchUpdateUseCase */ = {
+			isa = PBXGroup;
+			children = (
+				D1C9D0FD2E4422A300327A75 /* BatchUpdateUseCaseTests.swift */,
+			);
+			path = BatchUpdateUseCase;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -514,8 +527,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				D1C9D0CC2E40B26F00327A75 /* GetOddsUseCaseTests.swift in Sources */,
+				D1C9D0FE2E4422A300327A75 /* BatchUpdateUseCaseTests.swift in Sources */,
 				D1C9D08E2E3F50CB00327A75 /* GetMatchesUseCaseProtocol.swift in Sources */,
 				D1C9D0982E3F51CE00327A75 /* GetMatchesUseCase.swift in Sources */,
+				D1DFAC382E442C8A00598C78 /* BatchUpdateUseCaseProtocol.swift in Sources */,
 				D1C9D0BD2E40AD4A00327A75 /* MockMatchDataSourceTests.swift in Sources */,
 				D1C9D0AE2E3F535E00327A75 /* WebSocketDataSource.swift in Sources */,
 				D1C9D0842E3F4FDB00327A75 /* Odds.swift in Sources */,
@@ -529,6 +544,7 @@
 				D1C9D0A92E3F52D100327A75 /* MatchDataSourceProtocol.swift in Sources */,
 				D1C9D0B42E3F55BB00327A75 /* MockData.swift in Sources */,
 				D1C9D09D2E3F520400327A75 /* GetOddsUseCase.swift in Sources */,
+				D1DFAC372E442C7700598C78 /* BatchUpdateUseCase.swift in Sources */,
 				D1C9D08A2E3F50B100327A75 /* MatchRepositoryProtocol.swift in Sources */,
 				D1C9D0C42E40B05900327A75 /* MatchRepositoryTests.swift in Sources */,
 				D1C9D0BF2E40AF6E00327A75 /* CacheServiceTests.swift in Sources */,
