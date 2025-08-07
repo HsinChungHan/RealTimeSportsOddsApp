@@ -15,6 +15,10 @@
 - 實現 Thread-Safe 的資料存取機制
 - 整合性能監控與優化策略
 
+### HLV UML
+<img width="1298" height="681" alt="截圖 2025-08-07 下午3 52 42" src="https://github.com/user-attachments/assets/1474316e-fbe0-4307-81b4-da1ffea74803" />
+👉 [UML draw.io](https://drive.google.com/file/d/1VmSsyvhrFcLlnGMacoGkU2xpQdiYWHk-/view?usp=sharing)
+
 ### 關鍵元件說明
 
 #### 1. **PerformanceMetrics**
@@ -391,6 +395,9 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 
 ### Future work
 #### 目前的 FPSMonitor, PerformanceMetrics 同時負責監控、計算和回調通知，並由 ViewController 直接持有
-- 違反了 clean architecture 的分層原則，未來可以抽離出 UseCase 及 Repo。並將 UIKit, QuartzCore 抽離出 DomainLayer，確保 Usecase 是 platform independent，並將 UseCase 交由 viewModel 進行管理。
+- 目前的實作違反了 Clean Architecture 的分層原則，建議未來將 UseCase 與 Repository 抽離出來，並將 UIKit 與 QuartzCore 等平台相關的依賴從 Domain Layer 中移除，以確保 UseCase 保持 Platform-independent。
+- 接著，透過 ViewModel 負責管理與調度 UseCase，達成更清晰的分層與責任劃分。
+
 - 同時在 Presenter Layer 創建 Adapter，將 FPSMonitorProvider 與 PerformanceMetricsProvider 實作於此層，這兩個 Provider 與平台相關（如 UIKit、QuartzCore 等），因此應由 Presenter Layer 依賴具體實作，並透過介面注入至 UseCase，讓 UseCase 僅依賴抽象，維持 Platform-independent 的特性。
+
 - 具體實作可以參考 `origin/feature/extract-usecase-from-FPSMonitor`，但因為還有 bug，所以還未 merge 回 master
