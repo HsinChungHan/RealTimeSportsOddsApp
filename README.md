@@ -4,9 +4,69 @@
 <img width="425" height="958" alt="不滾動" src="https://github.com/user-attachments/assets/77f3b798-a17b-48ca-a77c-62c3fb09f3c0" />
 <img width="433" height="953" alt="有 FPS" src="https://github.com/user-attachments/assets/21d4427a-fd5f-4c9b-90c1-e01c92465b0c" />
 
-本專案實作了一個即時賽事賠率展示系統，支援 100 筆比賽資料的即時更新，具備以下核心功能：
+### ✅ 已完成
+#### 核心功能
+1. 資料來源
+- ✅ GET /matches: WebSocketDataSource 模擬 100 筆比賽資料
+- ✅ GET /odds: 模擬初始賠率資料，包含 teamA/teamB 賠率
 
-### 核心功能
+2. WebSocket 模擬
+- ✅ 每秒推播 10 筆: WebSocketDataSource.observeOddsUpdates() 精確實現每秒 10 筆更新
+- ✅ 指定 matchID 更新: 使用 MockData.getRandomOddsUpdate() 隨機選擇比賽更新
+
+3. 畫面行為
+
+- ✅ UITableView 展示: MatchListViewController + 自定義 MatchCell
+- ✅ 時間排序: 按 startTime 升序排序（最近在上面）
+- ✅ 即時更新: 只更新對應 cell，不整頁 reload
+- ✅ 保持順暢: 實現批次更新 + FPS 監控，避免卡頓
+
+4. Thread-safe 處理
+
+- ✅ 資料一致性: 使用 @MainActor 確保 UI 更新在主線程
+- ✅ 避免 race condition: CacheService 使用 concurrent queue + barrier
+
+#### 架構要求 
+1. MVVM 架構
+
+- ✅ Model: Match, Odds, MatchWithOdds
+- ✅ View: MatchListViewController, MatchCell
+- ✅ ViewModel: MatchListViewModel 使用 @Published 屬性
+
+2. Swift Concurrency
+
+- ✅ AsyncStream: WebSocket 模擬
+- ✅ async/await: 所有異步操作
+- ✅ Task.detached: 背景數據處理
+
+3. Clean Architecture
+- ✅ Presenter Layer: MatchListViewController, MatchListViewModel, MatchCell
+- ✅ Domain Layer: GetMatchesUseCase, GetOddsUseCase, BatchUpdateUseCase
+- ✅ Data Layer: MatchRepository, WebSocketDataSource, CacheService
+
+#### 加分項目
+1. WebSocket 斷線重連
+- ✅ 自動重連: MatchListViewModel.retryConnection()
+
+2. 快取機制
+- ✅ Memory Cache: CacheService
+- ✅ TTL 支持: matches (5分鐘), odds (1分鐘)
+- ✅ Thread-safe: concurrent queue + barrier flags
+
+#### 測試
+
+- ✅ CacheServiceTests: 快取功能測試
+- ✅ MatchRepositoryTests: Repository 層測試
+- ✅ GetMatchesUseCaseTests & GetOddsUseCaseTests: Use Case 測試
+- ✅ MockMatchDataSourceTests: 數據源測試
+- ✅ BatchUpdateUseCaseTests: 批次更新測試
+
+#### 性能監控 
+- ✅ FPSMonitor: 實時 FPS 監控
+- ✅ PerformanceMetrics: 性能指標收集
+
+
+實作了一個即時賽事賠率展示系統，支援 100 筆比賽資料的即時更新，具備以下核心功能：
 - **即時賠率更新**：模擬每秒 10 筆賠率推播，確保 UI 即時反映最新數據
 - **智慧滾動優化**：採用批次刷新資料到 UI 機制，在用戶滾動時累積資料更新，停止滾動時批次處理資料刷新，並確保只更新出現在畫面上的 match
 - **FPS 監控**：整合 CADisplayLink 實時監控滾動性能
