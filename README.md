@@ -255,8 +255,7 @@ private func handleBatchOddsUpdate(_ updates: [Int: Odds]) {
 
 ## 🚀 性能優化策略
 
-### 1.滾動停止時才刷新 UI**
-1. Timer 預設是加入在 **.default (NSDefaultRunLoopMode)** 模式中，因此：
+### 1.滾動停止時才刷新 UI
 
 專案使用 `BatchUpdateUseCase` 結合滾動狀態監測實現：
 
