@@ -1,6 +1,9 @@
 ## 專案 description
 📽️ [點我觀看操作影片 Demo](https://www.youtube.com/shorts/yJq1Qdl3SPM)
 
+<img width="425" height="958" alt="不滾動" src="https://github.com/user-attachments/assets/77f3b798-a17b-48ca-a77c-62c3fb09f3c0" />
+<img width="433" height="953" alt="有 FPS" src="https://github.com/user-attachments/assets/21d4427a-fd5f-4c9b-90c1-e01c92465b0c" />
+
 本專案實作了一個即時賽事賠率展示系統，支援 100 筆比賽資料的即時更新，具備以下核心功能：
 
 ### 核心功能
