@@ -455,6 +455,19 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 - Protocol-based 架構支援不同資料來源
 - 完整的測試覆蓋確保代碼品質
 
+### Memory Leaks 檢測
+<img width="1195" height="360" alt="image" src="https://github.com/user-attachments/assets/2fc91c33-2703-45a2-ae64-4524cef809ff" />
+
+#### 潛在問題分析
+1. 由 Instrument Leaks 的截圖，可發現無 memory leak，但 All Heap & Allocation 存在一些問題，未來可以進一步進行優化
+2. Persistent(長期存在的 objects): 38,741 個; Transient(已釋放的 objects): 502,458 個; Transient/Persistent = 13:1 (正常應為 2-3:1)。代表每 13 個 objects 中只有 1 個長期存在，系統需花費資源在頻繁內存分配/釋放
+3. 推測 WebSocket 每秒會創建 10 個 objects，並於用完時拋棄; 且於 BatchUseCase 中，滾動時會創建並累積需更新的 objects，並於停止滾動時更新完後釋放這些 objects; 在一開始便直接載入 100 個 Matche objects
+
+#### 改進方案
+1. Object Pooling, 創建 MatchOddsPool，過重用對象而非重複創建銷毀，來減少內存分配開銷和垃圾回收壓力。 並搭配 auto realease pool 的機制，在 pool 達設定的 memory useage limit 時，使用 LRU strategy 進行 memory 的釋放
+2. 可與後端討論採用分頁（pagination）機制，藉此減輕 client side 在載入大量資料時的負擔
+
+
 ### Future work
 #### 目前的 FPSMonitor, PerformanceMetrics 同時負責監控、計算和回調通知，並由 ViewController 直接持有
 - 違反了 Clean Architecture 的分層原則，未來需將 business logic 及 data source 抽離並封裝到 usecase layer 和 data layer。並將 UIKit 與 QuartzCore 等平台相關的依賴從 Domain Layer 中移除，以確保 UseCase 及 Data Layer 保持 Platform-independent。
@@ -462,7 +475,6 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 
 - 同時也需 Presenter Layer 創建 Adapter，將 FPSMonitorProvider 與 PerformanceMetricsProvider 實作於此層，這兩個 Provider 與平台相關（如 UIKit、QuartzCore 等），因此應由 Presenter Layer 依賴具體實作，並透過介面注入至 UseCase，讓 UseCase 僅依賴抽象，維持 Platform-independent 的特性(具體實作可以參考 `origin/feature/extract-usecase-from-FPSMonitor`，但因為還有 bug，所以還未 merge 回 master😅)
 - 若視 FPSMonitor 及 PerformanceMetrics 為外部 service，也可以讓其與 ViewController 之間建立抽象層，並封裝它們的實作細節成 Swift Package
-- 考量到本專案僅有 100 筆測試資料，因此採用一次性載入的方式。不過在實際應用中，可以與後端討論採用分頁（pagination）機制，藉此減輕 client side 在載入大量資料時的負擔，同時也能節省網路流量。
 - 因已經定義 remote service 與 cache 的 abstracted layer，未來可依據需求決定其實作細節，並將這些實作封裝成獨立的 Swift Package，以達到模組化與依賴隔離的目的
 
 
