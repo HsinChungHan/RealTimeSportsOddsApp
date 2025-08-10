@@ -80,7 +80,8 @@
 - 整合性能監控與優化策略
 
 ### HLV UML
-<img width="1298" height="681" alt="截圖 2025-08-07 下午3 52 42" src="https://github.com/user-attachments/assets/1474316e-fbe0-4307-81b4-da1ffea74803" />
+<img width="1482" height="841" alt="截圖 2025-08-10 上午9 46 26" src="https://github.com/user-attachments/assets/88b1529f-9228-457a-81a6-cd5ad5ab0b2d" />
+
 👉 [UML draw.io](https://drive.google.com/file/d/1VmSsyvhrFcLlnGMacoGkU2xpQdiYWHk-/view?usp=sharing)
 
 ### 關鍵元件說明
@@ -456,13 +457,13 @@ func test_ComplexScrollingScenario_ShouldHandleCorrectly() async throws {
 
 ### Future work
 #### 目前的 FPSMonitor, PerformanceMetrics 同時負責監控、計算和回調通知，並由 ViewController 直接持有
-- 目前的實作違反了 Clean Architecture 的分層原則，建議未來將 UseCase 與 Repository 抽離出來，並將 UIKit 與 QuartzCore 等平台相關的依賴從 Domain Layer 中移除，以確保 UseCase 保持 Platform-independent。
-- 接著，透過 ViewModel 負責管理與調度 UseCase，達成更清晰的分層與責任劃分。
+- 違反了 Clean Architecture 的分層原則，未來需將 business logic 及 data source 抽離並封裝到 usecase layer 和 data layer。並將 UIKit 與 QuartzCore 等平台相關的依賴從 Domain Layer 中移除，以確保 UseCase 及 Data Layer 保持 Platform-independent。
+- 並透過 ViewModel 負責管理與調度 UseCase，達成更清晰的分層與責任劃分
 
-- 同時在 Presenter Layer 創建 Adapter，將 FPSMonitorProvider 與 PerformanceMetricsProvider 實作於此層，這兩個 Provider 與平台相關（如 UIKit、QuartzCore 等），因此應由 Presenter Layer 依賴具體實作，並透過介面注入至 UseCase，讓 UseCase 僅依賴抽象，維持 Platform-independent 的特性。
-
-- 具體實作可以參考 `origin/feature/extract-usecase-from-FPSMonitor`，但因為還有 bug，所以還未 merge 回 master
-- 考量到本專案僅有 100 筆測試資料，因此採用一次性載入的方式。不過在實際應用中，可以與後端討論採用分頁（pagination）機制，藉此減輕前端在載入大量資料時的負擔，同時也能節省網路流量。
+- 同時也需 Presenter Layer 創建 Adapter，將 FPSMonitorProvider 與 PerformanceMetricsProvider 實作於此層，這兩個 Provider 與平台相關（如 UIKit、QuartzCore 等），因此應由 Presenter Layer 依賴具體實作，並透過介面注入至 UseCase，讓 UseCase 僅依賴抽象，維持 Platform-independent 的特性(具體實作可以參考 `origin/feature/extract-usecase-from-FPSMonitor`，但因為還有 bug，所以還未 merge 回 master😅)
+- 若視 FPSMonitor 及 PerformanceMetrics 為外部 service，也可以讓其與 ViewController 之間建立抽象層，並封裝它們的實作細節成 Swift Package
+- 考量到本專案僅有 100 筆測試資料，因此採用一次性載入的方式。不過在實際應用中，可以與後端討論採用分頁（pagination）機制，藉此減輕 client side 在載入大量資料時的負擔，同時也能節省網路流量。
+- 因已經定義 remote service 與 cache 的 abstracted layer，未來可依據需求決定其實作細節，並將這些實作封裝成獨立的 Swift Package，以達到模組化與依賴隔離的目的
 
 
 ### 感謝您辛苦 reviewe，有任何意見，都歡迎留言！
